@@ -1,0 +1,11 @@
+'''
+File: main.py
+Project: SportsSafety
+File Created: Wednesday, 8th June 2022 10:39:26 pm
+Author: Syeed (nur.syeed@stud.fra-uas.de, nuruddinsayeed14@gmail.com)
+-----
+Last Modified: Wednesday, 8th June 2022 10:39:28 pm
+Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
+-----
+Copyright 2022 - 2022 Your Company, Your Company
+'''

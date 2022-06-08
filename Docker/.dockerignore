@@ -1,0 +1,12 @@
+
+__pychache__/
+
+.idea/
+
+.venv/
+Practice/
+
+.git/
+
+Dockerfile
+docker-compose.yml
