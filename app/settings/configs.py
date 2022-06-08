@@ -20,16 +20,16 @@ ALLOWED_ORIGINS = [
     "http://localhost:8080",
 ]
 # CFG_LOGGER = logging.getLogger("app.config")
-CFG_LOGGER = logging.getLogger("sps_logger") # SPS for sports safety
+CFG_LOGGER = logging.getLogger("spm_logger") # SPM for sports Monitoring
 
 
 class _Settings(BaseSettings):
     """Receive required environment variable from environment or .env file"""
 
-    sps_host: str = "127.0.0.1"
-    sps_port: int = 8000
-    sps_access_key: str = "MySuperSecretAccessKey"
-    sps_secret_key: str = "MySuperSecretApiKey"
+    spm_host: str = "127.0.0.1"
+    spm_port: int = 8000
+    spm_access_key: str = "MySuperSecretAccessKey"
+    spm_secret_key: str = "MySuperSecretApiKey"
 
 
     debug: bool = False
@@ -51,7 +51,7 @@ def get_settings(**kwargs) -> _Settings:
 class LogConfig(BaseModel):
     """Logging configuration to be set for the server"""
 
-    LOGGER_NAME: str = "sps_logger"
+    LOGGER_NAME: str = "spn_logger"
     LOG_FORMAT: str = "[%(asctime)s] %(levelname)s [%(thread)d - %(threadName)s] in %(module)s - %(message)s"
     LOG_LEVEL: str = "DEBUG"
 
@@ -81,7 +81,7 @@ class LogConfig(BaseModel):
         }
     }
     loggers = {
-        "sps_logger": {
+        "spm_logger": {
             "handlers": ["default", "logfile"],
             "level": LOG_LEVEL
         },
