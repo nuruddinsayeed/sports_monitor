@@ -54,9 +54,9 @@ def get_app() -> FastAPI:
 def configure_routes(app: FastAPI) -> None:
     """Configure all routes"""
     # from app.routes import home_router
+    from app.routes import router as view_router
 
-    # app.include_router(home_router, prefix="", tags=["home"])
-    pass
+    app.include_router(view_router, prefix="", tags=["views"])
 
 
 # initialize app

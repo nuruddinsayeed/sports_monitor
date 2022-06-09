@@ -1,10 +1,10 @@
 '''
-File: __init__.py
+File: monitor_view.py
 Project: SportsSafety
-File Created: Wednesday, 8th June 2022 10:56:28 pm
+File Created: Friday, 10th June 2022 2:49:13 am
 Author: Syeed (nur.syeed@stud.fra-uas.de, nuruddinsayeed14@gmail.com)
 -----
-Last Modified: Wednesday, 8th June 2022 10:56:30 pm
+Last Modified: Friday, 10th June 2022 2:49:16 am
 Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 -----
 Copyright 2022 - 2022 This Module Belongs to Open source project
@@ -12,7 +12,10 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 
 from fastapi import APIRouter
 
-from .monitor_view import router as monitor_router
 
 router = APIRouter()
-router.include_router(monitor_router, prefix="/monitor-admin")
+
+
+@router.get("/home", tags=["Monitor"]) # TODO: add depends
+def monitor_home():
+    return {"Message": "Hello world"}
