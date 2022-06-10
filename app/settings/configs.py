@@ -31,9 +31,12 @@ class _Settings(BaseSettings):
     spm_access_key: str = "MySuperSecretAccessKey"
     spm_secret_key: str = "MySuperSecretApiKey"
 
-
     debug: bool = False
     debug_exceptions: bool = False
+    
+    # Mongo Config
+    SPM_MONGO_HOST:str = "127.0.0.1"
+    SPM_MONGO_PORT:int = 27017
 
     class Config:
         env_file = ".env"
