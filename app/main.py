@@ -24,7 +24,7 @@ from app.settings import mongo_conf
 from app.settings.configs import get_settings, ALLOWED_ORIGINS, LogConfig
 
 
-sps_logger = logging.getLogger('sps_logger')
+SPM_LOGGER = logging.getLogger("spm_logger")
 settings = get_settings()
 
 # ############
@@ -75,26 +75,27 @@ async def startup_event():
     
     # Seupt MongoDB
     await mongo_conf.connect_to_mongo()
-    mongo_client = mongo_conf.get_nosql_db()
+    mongo_client = await mongo_conf.get_nosql_db()
     db_mongo = mongo_client[settings.spm_mongo_db_name]
     
     # Create User Colleciton to Mongo
     try:
         db_mongo.create_collection("users")
     except CollectionInvalid as e:
-        sps_logger.warning(e)
+        SPM_LOGGER.warning(e)
         
     # Create Activity Colleciton to Mongo
     try:
         db_mongo.create_collection("user_activity")
     except CollectionInvalid as e:
-        sps_logger.warning(e) 
+        SPM_LOGGER.warning(e)
     
-    sps_logger.info("Hiii, I am 'SP Monitor'. I just started Running :)")
+    SPM_LOGGER.info("Hiii, I am 'Sports Monitor'. I just started Running :)")
     
 @app.on_event("shutdown")
 async def shutdown_event():
-    sps_logger.warning("Hyyy Human!!! I Stopped Runnig :'(!! Can you pelase help\
+    SPM_LOGGER.warning("Hyyy Human!!! I Stopped Runnig :'(!! Can you pelase help\
         me to run again")
+    await mongo_conf.disconnect_mongo()
 
 configure_routes(app=app)
