@@ -89,6 +89,13 @@ async def startup_event():
         db_mongo.create_collection("user_activity")
     except CollectionInvalid as e:
         SPM_LOGGER.warning(e)
+        
+    # Create MongoDB Collections indexes
+    try:
+        user_collection = db_mongo.users
+        user_collection.create_index("username", name="username", unique=True)
+    except CollectionInvalid as e:
+        SPM_LOGGER.warning(e)
     
     SPM_LOGGER.info("Hiii, I am 'Sports Monitor'. I just started Running :)")
     
