@@ -29,6 +29,7 @@ class _Settings(BaseSettings):
     spm_host: str = "127.0.0.1"
     spm_port: int = 8000
     spm_access_key: str = "MySuperSecretAccessKey"
+    jwt_token_algo:str = "HS256"
     spm_secret_key: str = "MySuperSecretApiKey"
 
     debug: bool = False
