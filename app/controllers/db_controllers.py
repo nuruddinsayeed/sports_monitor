@@ -51,7 +51,8 @@ class MongoOperations:
         row_data = collection.find_one({"user_email": user_mail})
         
         if row_data is not None:
-            return format_mongo_ids(row_data)
+            user_info = format_mongo_ids(row_data)
+            return UserInDb(**user_info)
         return None
     
     def add_user(self, user_data: UserInDb):

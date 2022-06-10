@@ -10,6 +10,7 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
+from typing import Union
 import bcrypt
 
 from fastapi import Depends, HTTPException, status
@@ -42,3 +43,15 @@ def create_user(user_name: str, user_email: str, password: str,
     
     return mongo_op.add_user(user_data=user)
     
+def authenticate_user(user_mail: str, password: str,
+                      mongo_op: MongoOperations = MongoOperations()
+                      ) -> Union[bool, UserInDb]:
+    user = get_user(user_mail=user_mail, mongo_op=mongo_op)
+    
+    if not user:
+        return False
+    
+    if not verify_password(password=password, hassed_pass=user.hashed_password):
+        return False
+    
+    return user
