@@ -18,6 +18,7 @@ from bson.objectid import ObjectId
 
 class User(BaseModel):
     username: str
+    user_email: str
     hashed_password: str
     disabled: bool
     
