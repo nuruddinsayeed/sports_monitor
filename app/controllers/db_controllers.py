@@ -11,10 +11,10 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
 from app.models.auth_models import UserInDb
-from app.settings.configs import get_settings
+from app.settings import config_vars, configs
 from app.settings.mongo_conf import get_nosql_db
 
-SETTINGS = get_settings()
+SETTINGS = configs.get_settings()
 
 def format_mongo_ids(nested_dicts: dict):
     """
@@ -39,12 +39,15 @@ def format_mongo_ids(nested_dicts: dict):
     return nested_dicts
 
 class MongoOperations:
-    async def __init__(self, db_name: str = SETTINGS.spm_mongo_db_name) -> None:
-        self.db = await get_nosql_db()[db_name]
+    
+    def __init__(self, db_name: str = SETTINGS.spm_mongo_db_name) -> None:
+        self.db = get_nosql_db()[db_name]
         
+    def get_user_collection(self):
+        return self.db.get_collection(config_vars.USER_COLLECTION_NAME)
         
     def get_user(self, user_mail: str) -> UserInDb:
-        collection = self.db.users
+        collection = self.get_user_collection()
         row_data = collection.find_one({"user_email": user_mail})
         
         if row_data is not None:
@@ -52,7 +55,8 @@ class MongoOperations:
         return None
     
     def add_user(self, user_data: UserInDb):
-        collection = self.db.users
+        # collection = self.db.users
+        collection = self.get_user_collection()
         try:
             response = collection.insert_one(user_data.dict())
             return {"id_inserted": str(response.inserted_id)}

@@ -20,7 +20,7 @@ class User(BaseModel):
     username: str
     user_email: str
     hashed_password: str
-    disabled: bool
+    active: bool = True
     
 class UserInDb(User):
     _id: ObjectId

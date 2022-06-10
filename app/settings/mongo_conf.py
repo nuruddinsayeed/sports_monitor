@@ -35,5 +35,5 @@ async def disconnect_mongo():
     db.client.close()
     SPM_LOGGER.info("MongoDB Disconnected")
     
-async def get_nosql_db() -> MongoClient:
+def get_nosql_db() -> MongoClient:
     return db.client

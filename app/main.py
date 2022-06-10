@@ -20,7 +20,7 @@ from fastapi.staticfiles import StaticFiles
 from app import app_version
 from logging.config import dictConfig
 from app.helpers import file_helper
-from app.settings import mongo_conf
+from app.settings import mongo_conf, config_vars
 from app.settings.configs import get_settings, ALLOWED_ORIGINS, LogConfig
 
 
@@ -80,13 +80,13 @@ async def startup_event():
     
     # Create User Colleciton to Mongo
     try:
-        db_mongo.create_collection("users")
+        db_mongo.create_collection(config_vars.USER_COLLECTION_NAME)
     except CollectionInvalid as e:
         SPM_LOGGER.warning(e)
         
     # Create Activity Colleciton to Mongo
     try:
-        db_mongo.create_collection("user_activity")
+        db_mongo.create_collection(config_vars.ACTIVITY_COLLECTION_NAME)
     except CollectionInvalid as e:
         SPM_LOGGER.warning(e)
         

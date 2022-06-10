@@ -16,7 +16,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
 from app.models.auth_models import UserInDb
-from app.settings import mongo_conf
+from app.controllers.db_controllers import MongoOperations
 
 
 oauth2_shceme = OAuth2PasswordBearer(tokenUrl="token")
@@ -28,4 +28,17 @@ def generate_pass_hash(password: str) -> str:
 def verify_password(password: str, hassed_pass: str | bytes) -> bool:
     return bcrypt.checkpw(password=str(password),
                           hashed_password=str(hassed_pass))
+
+def get_user(user_mail: str, mongo_op: MongoOperations) -> UserInDb:
+    return mongo_op.get_user(user_mail=user_mail)
+
+def create_user(user_name: str, user_email: str, password: str,
+                      mongo_op: MongoOperations):
+    password_hash = generate_pass_hash(password=password)
+    user = UserInDb(username=user_name,
+                    user_email=user_email,
+                    hashed_password=password_hash,
+                    active=True)
+    
+    return mongo_op.add_user(user_data=user)
     
