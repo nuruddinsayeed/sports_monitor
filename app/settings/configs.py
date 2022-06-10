@@ -35,8 +35,9 @@ class _Settings(BaseSettings):
     debug_exceptions: bool = False
     
     # Mongo Config
-    SPM_MONGO_HOST:str = "127.0.0.1"
-    SPM_MONGO_PORT:int = 27017
+    spm_mongo_db_name="spm_mongo"
+    spm_mongo_host:str = "127.0.0.1"
+    spm_mongo_port:int = 27017
 
     class Config:
         env_file = ".env"

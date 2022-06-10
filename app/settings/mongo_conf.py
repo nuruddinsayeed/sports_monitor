@@ -24,8 +24,8 @@ class MongoDB:
 db = MongoDB()
 
 async def connect_to_mongo():
-    host = SETTINGS.SPM_MONGO_HOST
-    port = SETTINGS.SPM_MONGO_PORT
+    host = SETTINGS.spm_mongo_host
+    port = SETTINGS.spm_mongo_port
     db.client = MongoClient(f"mongodb://{host}:{port}/", 
                             maxPoolSize=config_vars.MAX_CONNECTIONS_COUNT, 
                             minPoolSize=config_vars.MIN_CONNECTIONS_COUNT)

@@ -11,17 +11,20 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
 import logging
-from logging.config import dictConfig
-from app import app_version
-from app.settings.configs import get_settings, ALLOWED_ORIGINS, LogConfig
+from pymongo.errors import CollectionInvalid
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from app import app_version
+from logging.config import dictConfig
 from app.helpers import file_helper
+from app.settings import mongo_conf
+from app.settings.configs import get_settings, ALLOWED_ORIGINS, LogConfig
 
-logger = logging.getLogger('sps_logger')
+
+sps_logger = logging.getLogger('sps_logger')
 settings = get_settings()
 
 # ############
@@ -70,11 +73,28 @@ async def startup_event():
     file_helper.create_log_dir()
     dictConfig(LogConfig().dict())
     
-    logger.info("Hiii, I am 'SP Monitor'. I just started Running :)")
+    # Seupt MongoDB
+    await mongo_conf.connect_to_mongo()
+    mongo_client = mongo_conf.get_nosql_db()
+    db_mongo = mongo_client[settings.spm_mongo_db_name]
+    
+    # Create User Colleciton to Mongo
+    try:
+        db_mongo.create_collection("users")
+    except CollectionInvalid as e:
+        sps_logger.warning(e)
+        
+    # Create Activity Colleciton to Mongo
+    try:
+        db_mongo.create_collection("user_activity")
+    except CollectionInvalid as e:
+        sps_logger.warning(e) 
+    
+    sps_logger.info("Hiii, I am 'SP Monitor'. I just started Running :)")
     
 @app.on_event("shutdown")
 async def shutdown_event():
-    logger.warning("Hyyy Human!!! I Stopped Runnig :'(!! Can you pelase help\
+    sps_logger.warning("Hyyy Human!!! I Stopped Runnig :'(!! Can you pelase help\
         me to run again")
 
 configure_routes(app=app)
