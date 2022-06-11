@@ -81,15 +81,9 @@ def generate_access_token(data: dict, expire_delta: timedelta = None):
     
     return encoded_jwt
 
-def get_current_user(token: str = Depends(oauth2_shceme)) -> User:
-    
+def verify_access_token(token: str, auth_exception: HTTPException):
     SECRET_KEY = SETTINGS.spm_secret_key
     ALGORITHM = SETTINGS.jwt_token_algo
-    
-    err_msg = "Authentication Failed, Please Check you password or email"
-    auth_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                   detail=err_msg,
-                                   headers={"WWW-Authenticate": "Bearer"})
     
     try:
         payload = jwt.decode(token=token, key=SECRET_KEY,
@@ -101,6 +95,17 @@ def get_current_user(token: str = Depends(oauth2_shceme)) -> User:
     except JWSError:
         raise auth_exception
     
+    return token_data
+
+def get_current_user(token: str = Depends(oauth2_shceme)) -> User:
+    
+    
+    err_msg = "Authentication Failed, Please Check you password or email"
+    auth_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                   detail=err_msg,
+                                   headers={"WWW-Authenticate": "Bearer"})
+    
+    token_data = verify_access_token(token=token, auth_exception=auth_exception)
     user = get_user(user_mail=token_data.user_email)
     
     if not user:
