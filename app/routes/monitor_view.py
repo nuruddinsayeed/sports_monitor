@@ -16,6 +16,6 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.get("/home", tags=["Monitor"]) # TODO: add depends
+@router.get("/") # TODO: add depends
 def monitor_home():
     return {"Message": "Hello world"}

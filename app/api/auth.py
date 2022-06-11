@@ -10,7 +10,8 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
-from fastapi import APIRouter, Depends
+from datetime import timedelta
+from fastapi import APIRouter, Depends, HTTPException, status
 from pymongo import MongoClient
 
 from app.settings.configs import get_settings
@@ -24,9 +25,9 @@ router = APIRouter()
 SETTINGS = get_settings()
 
 
-router.get("register/", tags=["Authentication"], response_model=Token)
-def create_user(register_data: RegisterData,
-                client: MongoClient = Depends(mongo_conf.get_nosql_db)):
+@router.post("/register", response_model=Token)
+async def create_user(register_data: RegisterData,
+                      client: MongoClient = Depends(mongo_conf.get_nosql_db)):
     """Register user and return access token"""
     
     db = client.get_database(SETTINGS.spm_mongo_db_name)
@@ -36,4 +37,23 @@ def create_user(register_data: RegisterData,
     create_info = users.create_user(register_data=register_data, 
                                     collection=user_colleciton)
     
-    return create_info
+    print(create_info)
+
+    # Login And generate Token
+    user = users.authenticate_user(user_mail=register_data.user_email, 
+                                   password=register_data.password,
+                                   collection=user_colleciton)
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    
+    token_expire = timedelta(hours=24)
+    access_token = users.generate_access_token(
+        data={"user_mail": user.user_email},
+        expire_delta=token_expire
+    )
+    return {"access_token": access_token, "token_type": "bearer"}

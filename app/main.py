@@ -13,7 +13,7 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 import logging
 from pymongo.errors import CollectionInvalid
 
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -56,10 +56,11 @@ def get_app() -> FastAPI:
 
 def configure_routes(app: FastAPI) -> None:
     """Configure all routes"""
-    # from app.routes import home_router
     from app.routes import router as view_router
-
-    app.include_router(view_router, prefix="", tags=["views"])
+    from app.api import router as api_router
+    
+    app.include_router(view_router)
+    app.include_router(api_router)
 
 
 # initialize app
@@ -75,7 +76,7 @@ async def startup_event():
     
     # Seupt MongoDB
     await mongo_conf.connect_to_mongo()
-    mongo_client = await mongo_conf.get_nosql_db()
+    mongo_client = mongo_conf.get_nosql_db()
     db_mongo = mongo_client[settings.spm_mongo_db_name]
     
     # Create User Colleciton to Mongo
@@ -90,10 +91,11 @@ async def startup_event():
     except CollectionInvalid as e:
         SPM_LOGGER.warning(e)
         
-    # Create MongoDB Collections indexes
+    # Create MongoDB Collections indexes, for uniqe username
     try:
         user_collection = db_mongo.users
-        user_collection.create_index("username", name="username", unique=True)
+        user_collection.create_index("user_email", 
+                                     name="user_email", unique=True)
     except CollectionInvalid as e:
         SPM_LOGGER.warning(e)
     

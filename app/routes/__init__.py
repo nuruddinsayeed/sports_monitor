@@ -15,4 +15,4 @@ from fastapi import APIRouter
 from .monitor_view import router as monitor_router
 
 router = APIRouter()
-router.include_router(monitor_router, prefix="/monitor-admin")
+router.include_router(monitor_router, prefix="/monitor-admin", tags=["monitor"])

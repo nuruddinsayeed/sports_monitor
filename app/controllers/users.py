@@ -22,7 +22,6 @@ from app.models.requests_model import RegisterData
 
 from app.settings import configs
 from app.models.auth_models import TokenData, User, UserInDb
-from app.controllers.db_controllers import MongoOperations
 from app.controllers import db_controllers
 
 
@@ -34,8 +33,11 @@ def generate_pass_hash(password: str) -> str:
     return bcrypt.hashpw(str.encode(password), bcrypt.gensalt())
 
 def verify_password(password: str, hassed_pass: str | bytes) -> bool:
-    return bcrypt.checkpw(password=str(password),
-                          hashed_password=str(hassed_pass))
+    pass_byte = str.encode(password)
+    hashed_byte = str.encode(hassed_pass)
+    
+    return bcrypt.checkpw(password=pass_byte,
+                          hashed_password=hashed_byte)
 
 def get_user(user_mail: str, collection: Collection) -> UserInDb:
     row_data = collection.find_one({"user_email": user_mail})
@@ -69,12 +71,12 @@ def authenticate_user(user_mail: str, password: str,
 
 def generate_access_token(data: dict, expire_delta: timedelta = None):
     to_encode = data.copy()
-    expire = expire_delta if expire_delta \
+    expire_delta = expire_delta if expire_delta \
         else datetime.utcnow() + timedelta(hours=24)
     SECRET_KEY = SETTINGS.spm_secret_key
     ALGORITHM = SETTINGS.jwt_token_algo
     
-    to_encode["exp"] = expire
+    to_encode["exp"] = datetime.utcnow() + expire_delta
     encoded_jwt = jwt.encode(to_encode, key=SECRET_KEY, algorithm=ALGORITHM)
     
     return encoded_jwt
