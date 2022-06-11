@@ -1,5 +1,5 @@
 '''
-File: users.py
+File: auth_control.py
 Project: SportsSafety
 File Created: Friday, 10th June 2022 9:11:26 pm
 Author: Syeed (nur.syeed@stud.fra-uas.de, nuruddinsayeed14@gmail.com)
@@ -11,13 +11,14 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
 import bcrypt
-from typing import Union
+from typing import Optional, Union
 from datetime import datetime, timedelta
 from jose import JWSError, jwt
 from pymongo.collection import Collection
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.param_functions import Form
 from app.models.requests_model import RegisterData
 
 from app.settings import configs
@@ -112,3 +113,25 @@ def get_current_user(token: str = Depends(oauth2_shceme)) -> User:
         raise auth_exception
     
     return User(**user)
+
+class OAuthRequestForm(OAuth2PasswordRequestForm):
+    """Update existing OAuth2PasswordRequestForm to use email address"""
+    
+    def __init__(self,
+                 grant_type: str = Form(default=None, regex="password"),
+                 username: str = Form(default=None), 
+                 password: str = Form(),
+                 user_email: str = Form(),
+                 scope: str = Form(default=""),
+                 client_id: Optional[str] = Form(default=None),
+                 client_secret: Optional[str] = Form(default=None),):
+        
+        super().__init__(
+            grant_type=grant_type,
+            username=username,
+            password=password,
+            scope=scope,
+            client_id=client_id,
+            client_secret=client_secret,
+        )
+        self.user_email = user_email

@@ -1,4 +1,4 @@
-'''
+"""
 File: monitor_view.py
 Project: SportsSafety
 File Created: Friday, 10th June 2022 2:49:13 am
@@ -8,7 +8,7 @@ Last Modified: Friday, 10th June 2022 2:49:16 am
 Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 -----
 Copyright 2022 - 2022 This Module Belongs to Open source project
-'''
+"""
 
 from fastapi import APIRouter
 
