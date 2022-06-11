@@ -15,7 +15,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pymongo import MongoClient
 
 from app.settings.configs import get_settings
-from app.models.auth_models import Token
+from app.models.auth_models import Token, User
 from app.models.requests_model import RegisterData
 from app.controllers import auth_control
 from app.settings import mongo_conf, config_vars
@@ -83,3 +83,12 @@ async def create_user(register_data: RegisterData,
         expire_delta=token_expire
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/current_user")
+def get_current_user(
+    user: User = Depends(auth_control.get_current_active_user)):
+    """Returns current user"""
+    
+    user_info = user.dict()
+    user_info.pop("hashed_password")
+    return user_info
