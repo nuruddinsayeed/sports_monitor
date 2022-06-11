@@ -14,13 +14,16 @@ import bcrypt
 from typing import Union
 from datetime import datetime, timedelta
 from jose import JWSError, jwt
+from pymongo.collection import Collection
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from app.models.requests_model import RegisterData
 
 from app.settings import configs
 from app.models.auth_models import TokenData, User, UserInDb
 from app.controllers.db_controllers import MongoOperations
+from app.controllers import db_controllers
 
 
 oauth2_shceme = OAuth2PasswordBearer(tokenUrl="token")
@@ -34,23 +37,27 @@ def verify_password(password: str, hassed_pass: str | bytes) -> bool:
     return bcrypt.checkpw(password=str(password),
                           hashed_password=str(hassed_pass))
 
-def get_user(user_mail: str, mongo_op: MongoOperations) -> UserInDb:
-    return mongo_op.get_user(user_mail=user_mail)
+def get_user(user_mail: str, collection: Collection) -> UserInDb:
+    row_data = collection.find_one({"user_email": user_mail})
+        
+    if row_data is not None:
+        user_info = db_controllers.format_mongo_ids(row_data)
+        return UserInDb(**user_info)
+    return None
 
-def create_user(user_name: str, user_email: str, password: str,
-                      mongo_op: MongoOperations):
-    password_hash = generate_pass_hash(password=password)
-    user = UserInDb(username=user_name,
-                    user_email=user_email,
-                    hashed_password=password_hash,
-                    active=True)
-    
-    return mongo_op.add_user(user_data=user)
+def create_user(register_data: RegisterData, collection: Collection):
+    password_hash = generate_pass_hash(password=register_data.password)
+    user = UserInDb(**register_data.dict(), # TODO: Test this works
+                    hashed_password=password_hash)
+    try:
+        response = collection.insert_one(user.dict())
+        return {"id_inserted": str(response.inserted_id)}
+    except Exception as e:
+        raise Exception(f"{e}")
     
 def authenticate_user(user_mail: str, password: str,
-                      mongo_op: MongoOperations = MongoOperations()
-                      ) -> Union[bool, UserInDb]:
-    user = get_user(user_mail=user_mail, mongo_op=mongo_op)
+                      collection: Collection) -> Union[bool, UserInDb]:
+    user = get_user(user_mail=user_mail, collection=collection)
     
     if not user:
         return False
