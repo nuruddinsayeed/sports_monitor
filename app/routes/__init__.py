@@ -13,6 +13,8 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 from fastapi import APIRouter
 
 from .monitor_view import router as monitor_router
+from .websockets import router as ws_router
 
 router = APIRouter()
 router.include_router(monitor_router, prefix="/monitor-admin", tags=["monitor"])
+router.include_router(ws_router, prefix="/ws")

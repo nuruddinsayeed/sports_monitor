@@ -41,8 +41,9 @@ def verify_password(password: str, hassed_pass: str | bytes) -> bool:
                           hashed_password=hashed_byte)
 
 def get_user(user_mail: str, collection: Collection) -> UserInDb:
+    
     row_data = collection.find_one({"user_email": user_mail})
-    print(f'find data {user_mail} found {row_data}')
+    
     if row_data is not None:
         user_info = db_controllers.format_mongo_ids(row_data)
         return UserInDb(**user_info)

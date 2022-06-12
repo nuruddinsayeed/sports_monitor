@@ -54,14 +54,6 @@ def get_app() -> FastAPI:
     
     return app
 
-def configure_routes(app: FastAPI) -> None:
-    """Configure all routes"""
-    from app.routes import router as view_router
-    from app.api import router as api_router
-    
-    app.include_router(view_router)
-    app.include_router(api_router)
-
 
 # initialize app
 app = get_app()
@@ -106,5 +98,14 @@ async def shutdown_event():
     SPM_LOGGER.warning("Hyyy Human!!! I Stopped Runnig :'(!! Can you pelase help\
         me to run again")
     await mongo_conf.disconnect_mongo()
+    
 
+def configure_routes(app: FastAPI) -> None:
+    """Configure all routes"""
+    from app.routes import router as view_router
+    from app.api import router as api_router
+    
+    app.include_router(view_router)
+    app.include_router(api_router)
+    
 configure_routes(app=app)
