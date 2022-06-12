@@ -14,13 +14,16 @@ from fastapi import WebSocket, APIRouter
 from fastapi.responses import HTMLResponse
 from starlette.websockets import WebSocketState
 
-router = APIRouter()
+from app.controllers.websocket_controlls import ConnectionManager
 
+router = APIRouter()
+websocket_manager = ConnectionManager()
 
 @router.websocket("/{ativity_type}/{username}")
 async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     
-    await websocket.accept()
+    # TODO: verify user before connect
+    await websocket_manager.connect(websocket=websocket)
     
     while True:
         if websocket.application_state == WebSocketState.CONNECTED:
