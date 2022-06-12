@@ -14,15 +14,11 @@ from fastapi import WebSocket, APIRouter
 from fastapi.responses import HTMLResponse
 from starlette.websockets import WebSocketState
 
-from app.controllers import auth_control
-from app.models.auth_models import User
-
 router = APIRouter()
 
 
-@router.websocket("/running")
-async def running_ws(websocket: WebSocket):
-    # curr_user: User = Depends(auth_control.get_current_active_user)):
+@router.websocket("/{ativity_type}/{username}")
+async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     
     await websocket.accept()
     
@@ -31,7 +27,7 @@ async def running_ws(websocket: WebSocket):
             data = await websocket.receive_text()
             print(data)
             
-            await websocket.send_text("true")
+            await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
             
             
 html = """
@@ -49,7 +45,7 @@ html = """
         <ul id='messages'>
         </ul>
         <script>
-            var ws = new WebSocket("ws://127.0.0.1:8000/ws/running");
+            var ws = new WebSocket("ws://127.0.0.1:8000/ws/running/syeed");
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
