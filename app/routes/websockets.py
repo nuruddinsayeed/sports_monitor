@@ -16,11 +16,13 @@ from fastapi.responses import HTMLResponse
 from starlette.websockets import WebSocketState
 
 from app.controllers.websocket_controlls import ConnectionManager
+from app.Activity import activity_processor
 
 
 SPM_LOGGER = logging.getLogger("spm_logger")
 router = APIRouter()
 websocket_manager = ConnectionManager()
+
 
 @router.websocket("/{ativity_type}/{username}")
 async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
@@ -32,7 +34,10 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
         while True:
             if websocket.application_state == WebSocketState.CONNECTED:
                 data = await websocket.receive_text()
-                print(data)
+                
+                activity_processor.process_activity(username=username,
+                                                    activity_type=ativity_type,
+                                                    data=data)
                 
                 await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
             else:
@@ -42,7 +47,7 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
                 
     except WebSocketDisconnect:
         await websocket_manager.disconnect(websocket=websocket)
-        print("Websocket Disconnected...")
+        print("Websocket Disconnected.......")
             
             
 html = """
