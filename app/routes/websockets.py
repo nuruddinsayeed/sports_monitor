@@ -10,12 +10,15 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
-from fastapi import WebSocket, APIRouter
+import logging
+from fastapi import WebSocket, APIRouter, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from starlette.websockets import WebSocketState
 
 from app.controllers.websocket_controlls import ConnectionManager
 
+
+SPM_LOGGER = logging.getLogger("spm_logger")
 router = APIRouter()
 websocket_manager = ConnectionManager()
 
@@ -25,12 +28,21 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     # TODO: verify user before connect
     await websocket_manager.connect(websocket=websocket)
     
-    while True:
-        if websocket.application_state == WebSocketState.CONNECTED:
-            data = await websocket.receive_text()
-            print(data)
-            
-            await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
+    try:
+        while True:
+            if websocket.application_state == WebSocketState.CONNECTED:
+                data = await websocket.receive_text()
+                print(data)
+                
+                await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
+            else:
+                SPM_LOGGER.warning(f"Websocket disconnected for user {username}\
+                    Trying to reconnect...")
+                await websocket_manager.connect(websocket=websocket)
+                
+    except WebSocketDisconnect:
+        await websocket_manager.disconnect(websocket=websocket)
+        print("Websocket Disconnected...")
             
             
 html = """
