@@ -19,13 +19,13 @@ router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
 
-@router.get("/") # TODO: add depends
-def monitor_home():
-    return {"Message": "Hello world"}
+# @router.get("/") # TODO: add depends
+# def monitor_home():
+#     return {"Message": "Hello world"}
 
 # Activity Monitor Page
-@router.get("/monitor", name="login")
+@router.get("/", name="monitor",)
 async def index(request: Request):
     """Renders the login page"""
 
-    return templates.TemplateResponse('monitor.html', {'request': request})
+    return templates.TemplateResponse('monitor_view.html', {'request': request})

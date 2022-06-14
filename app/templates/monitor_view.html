@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+<!--Body-->
+{% block content %}
+
+    <!-- HERO
+    ================================================== -->
+    <section class="banner-area py-7">
+        <!-- Content -->
+        <div class="container">
+            <div class="row  align-items-center">
+                <div class="col-md-12 col-lg-7 text-center text-lg-left">
+                    <div class="main-banner">
+                        <!-- Heading -->
+                        <h1 class="display-4 mb-4 font-weight-normal">
+                            Sports Safety Monitor
+                        </h1>
+
+                        <!-- Subheading -->
+                        <p class="lead mb-4">
+                           Hello world
+                        </p>
+
+                        <!-- Button -->
+                        <p class="mb-0">
+                            <a href="{{url_for('monitor')}}" class="btn btn-primary btn-circled">
+                                Show all active users
+                            </a>
+                            <a href="{{url_for('monitor')}}" class="btn btn-primary btn-circled">
+                                Show all active users
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="banner-img-block">
+                        <img src="{{ url_for('static', path='/images/img1.jpg') }}" alt="running-img" class="img-fluid">
+                    </div>
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+{% endblock content %}

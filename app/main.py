@@ -50,7 +50,8 @@ def get_app() -> FastAPI:
         allow_headers=["*"] #TODO: Change it
     )
     
-    app.mount("/app/static/", StaticFiles)
+    app.mount("/app/static/", 
+              StaticFiles(directory="app/static"), name="static")
     
     return app
 
