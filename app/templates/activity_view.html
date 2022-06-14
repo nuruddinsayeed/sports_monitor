@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+<!--Body-->
+{% block content %}
+
+    <!-- ================================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script>
+
+    // let socket =new WebSocket('ws://127.0.0.1:8000/ws/running/syeed');
+    let socket =new WebSocket('ws://127.0.0.1:8000/ws/monitor/running/syeed');
+
+    // socket.onopen =function(e){
+    //     alert('Connection established');
+    // };
+
+    socket.addEventListener('open', function (event) {
+        socket.send('Hello Server!');
+    });
+
+    function update_data(dataObj, val, window) {
+        dataObjNew = dataObj['data']['datasets'][0]['data'];
+        dataObjNew.shift();
+        dataObjNew.push(val);
+        dataObj['data']['datasets'][0]['data'] = dataObjNew
+        window.update();
+    }
+
+    socket.onmessage = function(e){
+        console.log(e.data);
+        var recData=JSON.parse(e.data);
+        dataObjX = dataObjX
+        dataObjY = dataObjY
+        dataObjZ = dataObjZ
+        update_data(dataObjX, recData.value.x, windowX)
+        update_data(dataObjY, recData.value.y, windowY)
+        update_data(dataObjZ, recData.value.z, windowZ)
+
+        setTimeout(() => {  socket.send("recieved") }, 1000);
+    };
+
+    socket.onclose = function(e){
+        alert('Connection CLosed');
+    };
+    
+    </script>
+    <body>
+        <div style="max-width: 1100px; max-height: 400px;">
+            <canvas id="myChartX" width="1000" height="200"></canvas>
+        </div>
+        <div style="max-width: 1100px; max-height: 400px;">
+            <canvas id="myChartY" width="1000" height="200"></canvas>
+        </div>
+        <div style="max-width: 1100px; max-height: 400px;">
+            <canvas id="myChartZ" width="1000" height="200"></canvas>
+        </div>
+    </body>
+    
+    <script>
+    var dataObjX={
+        type: 'line',
+        data: {
+            labels: [1,2,3,4,5,6,7,8,9, 10, 11,12,13,14,15,16,17,18,19, 20, 21,22,23,24,25,26,27,28,29, 30, 31,32,33,34,35,36,37,38,39, 40, 40, 41,42,43,44,45,46,47,48,49,50],
+            datasets: [{
+                label: 'Real time data for X',
+                data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    }
+    var dataObjY={
+        type: 'line',
+        data: {
+            labels: [1,2,3,4,5,6,7,8,9, 10, 11,12,13,14,15,16,17,18,19, 20, 21,22,23,24,25,26,27,28,29, 30, 31,32,33,34,35,36,37,38,39, 40, 40, 41,42,43,44,45,46,47,48,49,50],
+            datasets: [{
+                label: 'Real time data for X',
+                data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    }
+    var dataObjZ={
+        type: 'line',
+        data: {
+            labels: [1,2,3,4,5,6,7,8,9, 10, 11,12,13,14,15,16,17,18,19, 20, 21,22,23,24,25,26,27,28,29, 30, 31,32,33,34,35,36,37,38,39, 40, 40, 41,42,43,44,45,46,47,48,49,50],
+            datasets: [{
+                label: 'Real time data for X',
+                data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    }
+    // var dataObjY = dataObjX
+    // var dataObjZ = dataObjX
+    // dataObjY['data']['datasets'][0]['label'] = 'Real time data for Y'
+    // dataObjZ['data']['datasets'][0]['label'] = 'Real time data for Z'
+
+    var ctx = document.getElementById('myChartX').getContext('2d');
+    var cty = document.getElementById('myChartY').getContext('2d');
+    var ctz = document.getElementById('myChartZ').getContext('2d');
+
+    windowX = window.myLine = new Chart(ctx,dataObjX );
+    windowY = window.myLine = new Chart(cty,dataObjY );
+    windowZ = window.myLine = new Chart(ctz,dataObjZ );
+
+    </script>
+
+{% endblock content %}

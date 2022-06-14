@@ -29,3 +29,9 @@ async def index(request: Request):
     """Renders the login page"""
 
     return templates.TemplateResponse('monitor_view.html', {'request': request})
+
+@router.get("/activity-detail", name="activity_detail",)
+async def index(request: Request):
+    """Renders the login page"""
+
+    return templates.TemplateResponse('activity_view.html', {'request': request})
