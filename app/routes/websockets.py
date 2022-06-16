@@ -31,7 +31,7 @@ websocket_manager = ConnectionManager()
 async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     
     # TODO: verify user before connect
-    await websocket_manager.connect(websocket=websocket)
+    await websocket_manager.connect_user(websocket=websocket)
     
     try:
         while True:
@@ -42,21 +42,26 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
                                                     activity_type=ativity_type,
                                                     data=data)
                 
+                await websocket_manager.brodcust_to_monitor(message=data)
+                
                 await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
             else:
                 SPM_LOGGER.warning(f"Websocket disconnected for user {username}\
                     Trying to reconnect...")
-                await websocket_manager.connect(websocket=websocket)
+                # await websocket_manager.connect(websocket=websocket)
+                await websocket_manager.connect_user(websocket=websocket)
                 
     except WebSocketDisconnect:
-        await websocket_manager.disconnect(websocket=websocket)
-        print("Websocket Disconnected.......")
+        # await websocket_manager.connect_user(websocket=websocket)
+        # await websocket_manager.disconnect(websocket=websocket,
+        #                                    username=username)
+        print("Websocket Disconnected.............................")
         
 @router.websocket("/monitor/{ativity_type}/{username}")
 async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     
     # TODO: verify user before connect
-    await websocket_manager.connect(websocket=websocket)
+    await websocket_manager.connect_moinitor(websocket=websocket)
     
     try:
         while True:
@@ -69,26 +74,55 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
                 
                 # await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
                 
-                for i in range(1000):
-                    dup = json.dumps(
-                    {'value': {
-                        'x':random.randint(1,100)/10,
-                        'y':random.randint(1,100)/10,
-                        'z': random.randint(1,100)/10
-                        }
-                    })
-                    print("sending rand ", dup)
+                data = await websocket.receive_text()
+                
+                if "value" in str(data):
+                    await websocket.send_text(data)
+                
+                
+                # user_socket = websocket_manager.get_acive_socket(
+                #     username=username)
+                # print(f"=========================> {websocket_manager.active_users}")
+                # if user_socket:
+                #     user_data = await user_socket.receive_text()
+                #     await websocket.send_text(user_data)
+                #     # data = await websocket.receive_text()
+                # else:
+                #     raise Exception("no connection found")
+                #     for i in range(10):
+                #         time.sleep(1)
+                #         continue
+                #         dup = json.dumps(
+                #         {'value': {
+                #             'x':random.randint(1,100)/10,
+                #             'y':random.randint(1,100)/10,
+                #             'z': random.randint(1,100)/10
+                #             }
+                #         })
+                #         print("sending rand ", dup)
+                        
+                #         await websocket.send_text(dup)
+                #         data = await websocket.receive_text()
+                        
+                # for i in range(10):
+                #     dup = json.dumps(
+                #     {'value': {
+                #         'x':random.randint(1,100)/10,
+                #         'y':random.randint(1,100)/10,
+                #         'z': random.randint(1,100)/10
+                #         }
+                #     })
+                #     print("sending rand ", dup)
                     
-                    await websocket.send_text(dup)
-                    data = await websocket.receive_text()
-                    # time.sleep(1)
-            else:
-                SPM_LOGGER.warning(f"Websocket disconnected for user {username}\
-                    Trying to reconnect...")
-                await websocket_manager.connect(websocket=websocket)
+                #     await websocket.send_text(dup)
+                #     data = await websocket.receive_text()
+            # else:
+            #     SPM_LOGGER.warning(f"Websocket disconnected for user {username}\
+            #         Trying to reconnect...")
+            #     await websocket_manager.connect(websocket=websocket)
                 
     except WebSocketDisconnect:
-        await websocket_manager.disconnect(websocket=websocket)
+        await websocket_manager.disconnect_monitor(websocket=websocket)
         print("Websocket Disconnected.......")
             
             

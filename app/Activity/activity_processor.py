@@ -15,13 +15,13 @@ from json.decoder import JSONDecodeError
 from pydantic.error_wrappers import ValidationError
 
 from app.helpers.excepitons import WrongDataTypeErr
-from app.models.activity_models import ActivityData
+from app.models.activity_models import ActivityData, ActivityInfo
 
 
 def process_activity(username: str, activity_type: str, data: str):
     try:
         data = json.loads(data)
-        activity_data = ActivityData(**data)
+        activity_data = ActivityInfo(**data)
     except (JSONDecodeError, ValidationError) as e:
         raise WrongDataTypeErr("Data must be like x:1, y:2, z:3 json")
     print(activity_data, username, activity_type)

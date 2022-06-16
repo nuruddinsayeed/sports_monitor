@@ -20,3 +20,6 @@ class ActivityData(BaseModel):
     x: float
     y: float
     z: float
+    
+class ActivityInfo(BaseModel):
+    value: ActivityData

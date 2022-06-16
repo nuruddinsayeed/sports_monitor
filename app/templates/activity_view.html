@@ -9,7 +9,7 @@
     <script>
 
     // let socket =new WebSocket('ws://127.0.0.1:8000/ws/running/syeed');
-    let socket =new WebSocket('ws://127.0.0.1:8000/ws/monitor/running/syeed');
+    let socket =new WebSocket('ws://127.0.0.1:8000/ws/monitor/running/sayed');
 
     // socket.onopen =function(e){
     //     alert('Connection established');
@@ -37,7 +37,9 @@
         update_data(dataObjY, recData.value.y, windowY)
         update_data(dataObjZ, recData.value.z, windowZ)
 
-        setTimeout(() => {  socket.send("recieved") }, 1000);
+        // setTimeout(() => {  socket.send("recieved") }, 1000);
+        // setTimeout(() => {console.log("waiting for 1 sec")}, 1000);
+
     };
 
     socket.onclose = function(e){
@@ -45,15 +47,17 @@
     };
     
     </script>
+
+    <h2 style="text-align: center;">User: {{username}}</h2>
     <body>
-        <div style="max-width: 1100px; max-height: 400px;">
-            <canvas id="myChartX" width="1000" height="200"></canvas>
+        <div style="max-width: 1800px; max-height: 220px; margin: auto;">
+            <canvas id="myChartX" width="1000" height="120"></canvas>
         </div>
-        <div style="max-width: 1100px; max-height: 400px;">
-            <canvas id="myChartY" width="1000" height="200"></canvas>
+        <div style="max-width: 1800px; max-height: 220px; margin: auto;">
+            <canvas id="myChartY" width="1000" height="120"></canvas>
         </div>
-        <div style="max-width: 1100px; max-height: 400px;">
-            <canvas id="myChartZ" width="1000" height="200"></canvas>
+        <div style="max-width: 1800px; max-height: 220px; margin: auto;">
+            <canvas id="myChartZ" width="1000" height="120"></canvas>
         </div>
     </body>
     
