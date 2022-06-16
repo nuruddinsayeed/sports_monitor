@@ -62,13 +62,19 @@
     </body>
     
     <script>
+        const labels = {{graph_labels|tojson}};
+        const x_data = {{accumulator_data_x|tojson}};
+        const y_data = {{accumulator_data_y|tojson}};
+        const z_data = {{accumulator_data_z|tojson}};
+
+
     var dataObjX={
         type: 'line',
         data: {
-            labels: [1,2,3,4,5,6,7,8,9, 10, 11,12,13,14,15,16,17,18,19, 20, 21,22,23,24,25,26,27,28,29, 30, 31,32,33,34,35,36,37,38,39, 40, 40, 41,42,43,44,45,46,47,48,49,50],
+            labels: labels,
             datasets: [{
                 label: 'Real time data for X',
-                data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                data: x_data,
             }]
         },
         options: {
@@ -84,10 +90,10 @@
     var dataObjY={
         type: 'line',
         data: {
-            labels: [1,2,3,4,5,6,7,8,9, 10, 11,12,13,14,15,16,17,18,19, 20, 21,22,23,24,25,26,27,28,29, 30, 31,32,33,34,35,36,37,38,39, 40, 40, 41,42,43,44,45,46,47,48,49,50],
+            labels: labels,
             datasets: [{
                 label: 'Real time data for Y',
-                data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                data: y_data,
             }]
         },
         options: {
@@ -103,10 +109,10 @@
     var dataObjZ={
         type: 'line',
         data: {
-            labels: [1,2,3,4,5,6,7,8,9, 10, 11,12,13,14,15,16,17,18,19, 20, 21,22,23,24,25,26,27,28,29, 30, 31,32,33,34,35,36,37,38,39, 40, 40, 41,42,43,44,45,46,47,48,49,50],
+            labels: labels,
             datasets: [{
                 label: 'Real time data for Z',
-                data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                data: z_data,
             }]
         },
         options: {

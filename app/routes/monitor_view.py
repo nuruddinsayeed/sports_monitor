@@ -34,5 +34,10 @@ async def index(request: Request):
 async def index(request: Request):
     """Renders the login page"""
 
-    data = {'request': request, 'username': 'Syeed'}
+    data = {'request': request, 
+            'username': 'Syeed',
+            "graph_labels": [i for i in range(180)],
+            "accumulator_data_x": [0 for _ in range(180)],
+            "accumulator_data_y": [0 for _ in range(180)],
+            "accumulator_data_z": [0 for _ in range(180)],}
     return templates.TemplateResponse('activity_view.html', data)
