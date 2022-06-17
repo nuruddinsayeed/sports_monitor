@@ -8,12 +8,11 @@ async def send_to_ws():
         
         for i in range(120):
             dup = json.dumps(
-            {'value': {
+            {
                 'x':random.randint(1,100)/10,
                 'y':random.randint(1,100)/10,
-                'z': random.randint(1,100)/10
-                },
-             'activity_class': 'Jogging'
+                'z': random.randint(1,100)/10,
+                'activity_class': 'Jogging'
             })
             print("sending rand ", dup)
             

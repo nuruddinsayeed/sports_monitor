@@ -52,6 +52,7 @@ def get_settings(**kwargs) -> _Settings:
 
     return _Settings(**kwargs)
 
+SETTINGS = get_settings()
 
 class LogConfig(BaseModel):
     """Logging configuration to be set for the server"""
@@ -91,3 +92,4 @@ class LogConfig(BaseModel):
             "level": LOG_LEVEL
         },
     }
+    

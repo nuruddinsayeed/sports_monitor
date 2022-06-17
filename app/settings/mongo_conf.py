@@ -18,22 +18,27 @@ from app.settings.configs import get_settings
 SETTINGS = get_settings()
 SPM_LOGGER = logging.getLogger("spm_logger")
 
+
 class MongoDB:
     client: MongoClient = None
-    
+
+
 db = MongoDB()
+
 
 async def connect_to_mongo():
     host = SETTINGS.spm_mongo_host
     port = SETTINGS.spm_mongo_port
-    db.client = MongoClient(f"mongodb://{host}:{port}/", 
-                            maxPoolSize=config_vars.MAX_CONNECTIONS_COUNT, 
+    db.client = MongoClient(f"mongodb://{host}:{port}/",
+                            maxPoolSize=config_vars.MAX_CONNECTIONS_COUNT,
                             minPoolSize=config_vars.MIN_CONNECTIONS_COUNT)
     SPM_LOGGER.info("MongoDb Connected")
-    
+
+
 async def disconnect_mongo():
     db.client.close()
     SPM_LOGGER.info("MongoDB Disconnected")
-    
-def get_nosql_db() -> MongoClient:
+
+
+def get_nosql_client() -> MongoClient:
     return db.client

@@ -69,7 +69,7 @@ async def startup_event():
     
     # Seupt MongoDB
     await mongo_conf.connect_to_mongo()
-    mongo_client = mongo_conf.get_nosql_db()
+    mongo_client = mongo_conf.get_nosql_client()
     db_mongo = mongo_client[settings.spm_mongo_db_name]
     
     # Create User Colleciton to Mongo

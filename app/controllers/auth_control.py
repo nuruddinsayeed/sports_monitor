@@ -101,8 +101,7 @@ def verify_access_token(token: str, auth_exception: HTTPException):
 
 def get_current_user(token: str = Depends(oauth2_shceme)) -> User:
     
-    
-    client = mongo_conf.get_nosql_db()
+    client = mongo_conf.get_nosql_client()
     db = client.get_database(SETTINGS.spm_mongo_db_name)
     user_collection = db.get_collection(config_vars.USER_COLLECTION_NAME)
     
@@ -120,6 +119,7 @@ def get_current_user(token: str = Depends(oauth2_shceme)) -> User:
     return User(**user.dict())
 
 def get_current_active_user(curr_user: User = Depends(get_current_user)):
+    
     if not curr_user.active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

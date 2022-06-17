@@ -16,10 +16,10 @@ from pydantic.error_wrappers import ValidationError
 
 from app.helpers.excepitons import WrongDataTypeErr
 from app.models.activity_models import ActivityInfo
+from app.controllers import activity_controller
 
 
-def process_activity(username: str, activity_type: str,
-                     data: str) -> str:
+def validate_data(username: str, data: str) -> ActivityInfo:
     try:
         data = json.loads(data)
         valideted_activity_data = ActivityInfo(**data)
@@ -28,7 +28,21 @@ def process_activity(username: str, activity_type: str,
     
     # add user name and jsonify
     valideted_activity_data.username = username
-    json_data = json.dumps(valideted_activity_data.dict())
-    print(valideted_activity_data, username, activity_type)
+    
+    return valideted_activity_data
+
+def process_activity(username: str, activity_type: str,
+                     data: str) -> str:
+    
+    # validate dataq
+    validated_data = validate_data(username=username, data=data)
+    db_data = ActivityInfo(**validated_data.dict())
+    
+    # store to mongoDB
+    activity_controller.upload_activity(user_mdb_id=username,
+                                        activity_data=db_data)
+    
+    json_data = json.dumps(validated_data.dict(), default=str)
+    print(validated_data, username, activity_type)
     
     return json_data
