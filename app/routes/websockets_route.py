@@ -43,7 +43,7 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
                 )
                 
                 await websocket_manager.brodcust_to_monitor(
-                    message=processed_activity)
+                    message=processed_activity, username=username)
                 
                 await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
             else:
@@ -62,21 +62,19 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
 async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     
     # TODO: verify user before connect
-    await websocket_manager.connect_moinitor(websocket=websocket)
+    await websocket_manager.connect_moinitor(websocket=websocket,
+                                             username=username)
     
     try:
         while True:
             if websocket.application_state == WebSocketState.CONNECTED:
                 
                 data = await websocket.receive_text()
-                
-                print(f'i-----------------------> (((((({username}))){data})))')
-                if username in str(data):
-                    print(f"data found ------ user name foudn ============= > {data}")
-                    # await websocket.send_text(data)
+                print(f'user sayes {data}')
                    
     except WebSocketDisconnect:
-        await websocket_manager.disconnect_monitor(websocket=websocket)
+        await websocket_manager.disconnect_monitor(websocket=websocket,
+                                                   username=username)
         print("Websocket Disconnected.......")
             
             
