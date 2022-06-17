@@ -23,3 +23,5 @@ class ActivityData(BaseModel):
     
 class ActivityInfo(BaseModel):
     value: ActivityData
+    activity_class: str
+    username: Optional[str]

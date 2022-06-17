@@ -38,11 +38,12 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
             if websocket.application_state == WebSocketState.CONNECTED:
                 data = await websocket.receive_text()
                 
-                activity_processor.process_activity(username=username,
-                                                    activity_type=ativity_type,
-                                                    data=data)
+                processed_activity = activity_processor.process_activity(
+                    username=username,activity_type=ativity_type,data=data
+                )
                 
-                await websocket_manager.brodcust_to_monitor(message=data)
+                await websocket_manager.brodcust_to_monitor(
+                    message=processed_activity)
                 
                 await websocket.send_text(f"activity: ({ativity_type}) name: ({username})")
             else:
@@ -69,8 +70,10 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
                 
                 data = await websocket.receive_text()
                 
-                if "value" in str(data):
-                    await websocket.send_text(data)
+                print(f'i-----------------------> (((((({username}))){data})))')
+                if username in str(data):
+                    print(f"data found ------ user name foudn ============= > {data}")
+                    # await websocket.send_text(data)
                    
     except WebSocketDisconnect:
         await websocket_manager.disconnect_monitor(websocket=websocket)
