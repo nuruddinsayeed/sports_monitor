@@ -13,6 +13,7 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 from datetime import datetime
 from bson import ObjectId
 from pymongo.collection import Collection
+from pymongo.errors import  WriteError
 
 from app.models.activity_models import ActivityInfo, ActivityUserDB
 from app.settings import config_vars, mongo_conf
@@ -59,15 +60,35 @@ def upload_activity(user_mdb_id: str, activity_data: ActivityInfo):
     #                     {"$push": {"activity_buckets.$.activities": activity_data.dict()}})
     
 
+    try:
+        collection.update_one(
+        filter={
+            "user_id": user_mdb_id,
+            "activity_buckets.create_at": curr_date_hour
+        },
+        update={
+            "$push": {
+                "activity_buckets.$.activities": activity_data.dict()}
+        },
+        upsert=True
+        )
+    except WriteError:
+        collection.insert_one(
+            {"user_id": user_mdb_id,
+             "activity_buckets":[{"_id": bucket_ob_id,
+                                  "create_at":curr_date_hour,
+                                  "activities": [activity_data.dict(),]}] }
+        )
+    
     # collection.update_one(
     #     filter={
-    #         "user_id": user_mdb_id,
-    #         "activity_buckets.create_at": curr_date_hour
+    #         "user_id": user_mdb_id
     #     },
     #     update={
     #         "$push": {
-    #             "activity_buckets.$.activities": activity_data.dict()}
+    #             "activity_buckets.$[i].activities": activity_data.dict()}
     #     },
+    #     array_filters=[{'i.create_at': curr_date_hour},],
     #     upsert=True
     #     )
     
@@ -82,7 +103,7 @@ def upload_activity(user_mdb_id: str, activity_data: ActivityInfo):
     #     upsert=True
     #     )
     
-    collection.insert_one({"user_id": user_mdb_id, **activity_data.dict()})
+    # collection.insert_one({"user_id": user_mdb_id, **activity_data.dict()})
 
     # find = collection.find_one({"user_id": user_mdb_id, "activity_buckets.create_at": curr_date_hour })
     # print(f'============== {find} id {curr_date_hour}')
