@@ -24,6 +24,7 @@ class User(BaseModel):
     
 class UserInDb(User):
     _id: ObjectId
+    id: Optional[str]
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
 class Token(BaseModel):

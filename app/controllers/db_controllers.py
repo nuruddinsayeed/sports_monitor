@@ -21,7 +21,6 @@ def format_mongo_ids(nested_dicts: dict):
     Loops through nested dictionary (with arrays 1 layer deep) to
     properly format the MongoDB '_id' field to a string instead of an ObjectId
     """
-    
     for key, val in nested_dicts.items():
         if isinstance(val, dict):
             nested_dicts[key] = format_mongo_ids(val)

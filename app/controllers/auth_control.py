@@ -39,6 +39,20 @@ def verify_password(password: str, hassed_pass: str | bytes) -> bool:
     
     return bcrypt.checkpw(password=pass_byte,
                           hashed_password=hashed_byte)
+    
+def verify_username(username: str) -> UserInDb:
+    """Verifies user by username and returns user_id from db"""
+    # TODO: Change it to jwt token authenticaiton
+    
+    client = mongo_conf.get_nosql_client()
+    db = client.get_database(SETTINGS.spm_mongo_db_name)
+    user_collection = db.get_collection(config_vars.USER_COLLECTION_NAME)
+    
+    row_data = user_collection.find_one({"username": username})
+    if row_data is not None:
+        user_info = db_controllers.format_mongo_ids(row_data)
+        return UserInDb(id=user_info.get("_id"), **user_info)
+    return None
 
 def get_user(user_mail: str, collection: Collection) -> UserInDb:
     

@@ -89,6 +89,8 @@ async def startup_event():
         user_collection = db_mongo.users
         user_collection.create_index("user_email", 
                                      name="user_email", unique=True)
+        user_collection.create_index("username", 
+                                     name="username", unique=True)
     except CollectionInvalid as e:
         SPM_LOGGER.warning(e)
     

@@ -60,7 +60,6 @@ async def create_user(register_data: RegisterData,
     create_info = auth_control.create_user(register_data=register_data,
                                            collection=user_colleciton)
 
-    print(create_info)
 
     # Login And generate Token
     user = auth_control.authenticate_user(user_mail=register_data.user_email,

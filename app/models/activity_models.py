@@ -24,7 +24,7 @@ class ActivityData(BaseModel):
 
 class ActivityInfo(ActivityData):
     activity_class: str
-    username: Optional[str]
+    user_id: Optional[str]
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
