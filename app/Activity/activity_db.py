@@ -182,7 +182,6 @@ def get_latest_activities(user_id: str) -> List[ActivityInfo]:
         raise NotFoundError("No User Activity found") 
     
     # TODO: Check if this can be done in Mongo query
-    activities.sort(key=lambda x: x.get("created_at"),
-                                        reverse=True)
+    activities.sort(key=lambda x: x.get("created_at"))
     validated_activities = validate_activities(activities)
     return validated_activities

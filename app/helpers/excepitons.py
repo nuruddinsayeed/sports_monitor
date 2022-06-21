@@ -24,3 +24,10 @@ class NotFoundError(Exception):
     def __init__(self, message: str) -> None:
         err = f"Not Found. {message}"
         super().__init__(err)
+        
+class AlreadlyConnected(Exception):
+    """Custom Exception for when data is not found"""
+
+    def __init__(self, message: str) -> None:
+        err = f"Alreadly Connected. {message}"
+        super().__init__(err)

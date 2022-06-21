@@ -56,6 +56,7 @@ async def index(request: Request, username: str):
         x = [*empty_vals, *x]
         y = [*empty_vals, *y]
         z = [*empty_vals, *z]
+    print(x[-10:])
 
     data = {'request': request, 
             'username': user.username,

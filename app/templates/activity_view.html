@@ -9,7 +9,7 @@
     <script>
 
     // let socket =new WebSocket('ws://127.0.0.1:8000/ws/running/syeed');
-    let socket =new WebSocket('ws://127.0.0.1:8000/ws/monitor/running/sayed');
+    let socket =new WebSocket('ws://127.0.0.1:8000/ws/monitor/user/sayed');
 
     // socket.onopen =function(e){
     //     alert('Connection established');
@@ -43,7 +43,7 @@
     };
 
     socket.onclose = function(e){
-        alert('Connection CLosed');
+        alert('Connection Closed. Only one live monitor can be open for one user');
     };
     
     </script>

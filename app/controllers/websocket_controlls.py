@@ -14,6 +14,8 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 from typing import Dict
 from fastapi import WebSocket
 
+from app.helpers.excepitons import AlreadlyConnected
+
 
 class ConnectionManager:
     """Manges Websockets connections"""
@@ -27,6 +29,8 @@ class ConnectionManager:
     
     async def connect_moinitor(self, websocket: WebSocket, username: str):
         await websocket.accept()
+        if self.user_monitor.get(username, None):
+            raise AlreadlyConnected("A monitor is already Monitoring this user")
         self.user_monitor[username] = websocket
     
     async def brodcust_to_monitor(self, message: str, username: str):
