@@ -29,7 +29,8 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     
     # TODO: verify user before connect
     await websocket_manager.connect_user(websocket=websocket,
-                                         username=username)
+                                         username=username,
+                                         activity_type = ativity_type)
     try:
         while True:
             if websocket.application_state == WebSocketState.CONNECTED:
@@ -54,7 +55,8 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
         # await websocket_manager.connect_user(websocket=websocket)
         # await websocket_manager.disconnect(websocket=websocket,
         #                                    username=username)
-        await websocket_manager.disconnect_user(username=username)
+        await websocket_manager.disconnect_user(username=username,
+                                                activity_type = ativity_type)
         print("Websocket Disconnected....")
         
 @router.websocket("/monitor/user/{username}")

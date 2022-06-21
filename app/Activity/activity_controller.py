@@ -68,11 +68,11 @@ def upload_activity(activity_data: ActivityInfo):
                                    "activities": [activity_data.dict(), ]}]}
         )
 
-def add_active_user(username: str, mongo_op: MongoOperations):
-    user = ActiveUser(username=username)
+def add_active_user(username: str, activity_type:str, mongo_op: MongoOperations):
+    user = ActiveUser(username=username, activity_type=activity_type)
     mongo_op.insert_one(user.dict())
 
-def remove_active_user(username: str, mongo_op: MongoOperations):
-    user = ActiveUser(username=username)
+def remove_active_user(username: str, activity_type:str, mongo_op: MongoOperations):
+    user = ActiveUser(username=username, activity_type=activity_type)
     mongo_op.insert_one(user.dict())
     mongo_op.delete_many(user.dict())

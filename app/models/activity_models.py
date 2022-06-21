@@ -45,4 +45,5 @@ class ActivityUserDB(BaseModel):
 class ActiveUser(BaseModel):
     _id: ObjectId
     username: str
-    object_roll: str = "ActiveUser"
+    activity_type:str
+    object_roll: str = "ActiveUser" 
