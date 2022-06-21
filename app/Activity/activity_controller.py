@@ -15,7 +15,7 @@ from bson import ObjectId
 from pymongo.collection import Collection
 from pymongo.errors import WriteError
 
-from app.models.activity_models import ActivityInfo, ActivityUserDB
+from app.models.activity_models import ActiveUser, ActivityInfo, ActivityUserDB
 from app.controllers.db_controllers import MongoOperations
 from app.settings import config_vars, mongo_conf
 from app.settings import mongo_conf
@@ -69,7 +69,10 @@ def upload_activity(activity_data: ActivityInfo):
         )
 
 def add_active_user(username: str, mongo_op: MongoOperations):
-    mongo_op.insert_one({"username": username})
+    user = ActiveUser(username=username)
+    mongo_op.insert_one(user.dict())
 
 def remove_active_user(username: str, mongo_op: MongoOperations):
-    mongo_op.delete_many({"username": username})
+    user = ActiveUser(username=username)
+    mongo_op.insert_one(user.dict())
+    mongo_op.delete_many(user.dict())

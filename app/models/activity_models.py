@@ -41,3 +41,8 @@ class ActivityUserDB(BaseModel):
     _id: ObjectId
     user_id: str
     activity_buckets: List[ActivityBucketMDB]
+    
+class ActiveUser(BaseModel):
+    _id: ObjectId
+    username: str
+    object_roll: str = "ActiveUser"
