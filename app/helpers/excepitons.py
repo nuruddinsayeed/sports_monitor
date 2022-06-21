@@ -17,3 +17,10 @@ class WrongDataTypeErr(Exception):
     def __init__(self, message: str) -> None:
         err = f"Data Is Not valid. {message}"
         super().__init__(err)
+        
+class NotFoundError(Exception):
+    """Custom Exception for when data is not found"""
+
+    def __init__(self, message: str) -> None:
+        err = f"Not Found. {message}"
+        super().__init__(err)

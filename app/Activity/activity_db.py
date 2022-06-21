@@ -10,10 +10,14 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
+from tkinter import E
+import pymongo
 from datetime import datetime
 from bson import ObjectId
 from pymongo.collection import Collection
 from pymongo.errors import WriteError
+from app.controllers import db_controllers
+from app.helpers.excepitons import NotFoundError
 
 from app.models.activity_models import ActivityInfo, ActivityUserDB
 from app.settings import config_vars, mongo_conf
@@ -58,7 +62,12 @@ def upload_activity(activity_data: ActivityInfo):
     # ret = collection.update_one({"user_id": user_mdb_id, "activity_buckets._id": bucket_ob_id },
     #                     {"$push": {"activity_buckets.$.activities": activity_data.dict()}})
 
-    try:
+    total_document = collection.count_documents({
+                "user_id": activity_data.user_id,
+                "activity_buckets.create_at": curr_date_hour
+            })
+    
+    if total_document: # > 0
         collection.update_one(
             filter={
                 "user_id": activity_data.user_id,
@@ -67,16 +76,44 @@ def upload_activity(activity_data: ActivityInfo):
             update={
                 "$push": {
                     "activity_buckets.$.activities": activity_data.dict()}
+            }
+        )
+    else:
+        collection.update_one(
+            filter={
+                "user_id": activity_data.user_id,
+            },
+            update={
+                "$push": {
+                    "activity_buckets": {
+                        "_id": bucket_ob_id,
+                        "create_at": curr_date_hour,
+                        "activities": [activity_data.dict(), ]
+                    }}
             },
             upsert=True
         )
-    except WriteError:
-        collection.insert_one(
-            {"user_id": activity_data.user_id,
-             "activity_buckets": [{"_id": bucket_ob_id,
-                                   "create_at": curr_date_hour,
-                                   "activities": [activity_data.dict(), ]}]}
-        )
+    
+    # try:
+    #     collection.update_one(
+    #         filter={
+    #             "user_id": activity_data.user_id,
+    #             "activity_buckets.create_at": curr_date_hour
+    #         },
+    #         update={
+    #             "$push": {
+    #                 "activity_buckets.$.activities": activity_data.dict()}
+    #         },
+    #         upsert=True
+    #     )
+    # except WriteError as e:
+    #     raise e
+    #     collection.insert_one(
+    #         {"user_id": activity_data.user_id,
+    #          "activity_buckets": [{"_id": bucket_ob_id,
+    #                                "create_at": curr_date_hour,
+    #                                "activities": [activity_data.dict(), ]}]}
+    #     )
 
     # collection.update_one(
     #     filter={
@@ -105,3 +142,38 @@ def upload_activity(activity_data: ActivityInfo):
 
     # find = collection.find_one({"user_id": user_mdb_id, "activity_buckets.create_at": curr_date_hour })
     # print(f'============== {find} id {curr_date_hour}')
+
+# def get_n_activity(user_id: str, n: int = 180):
+def get_last_activities(user_id: str = "62af6a1f5be27eb81a61db95"):
+    
+    """Returns n number of activity of the user"""
+    
+    collection = get_activity_collection()
+    
+    pipeline = [
+        {
+            "$match": {"user_id": user_id},
+        },
+        {"$unwind": "$activity_buckets"},
+        {
+            "$sort": {'activity_buckets.create_at': pymongo.DESCENDING},
+        },
+        {
+            "$limit": 1,
+        }
+    ]
+        
+    activity_bucket = collection.aggregate(pipeline)
+    res: dict = activity_bucket.next()
+    
+    if not res:
+        raise NotFoundError("No User Activity found") 
+    
+    formated_acivities =  db_controllers.format_mongo_ids(res)
+    
+    try:
+        activities = formated_acivities["activity_buckets"]["activities"]
+    except KeyError:
+        raise NotFoundError("No User Activity found") 
+
+    return activities
