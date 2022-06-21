@@ -28,8 +28,8 @@ websocket_manager = ConnectionManager()
 async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
     
     # TODO: verify user before connect
-    await websocket_manager.connect_user(websocket=websocket)
-    print(f'======================================---------------- {ativity_type}')
+    await websocket_manager.connect_user(websocket=websocket,
+                                         username=username)
     try:
         while True:
             if websocket.application_state == WebSocketState.CONNECTED:
@@ -47,12 +47,14 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
                 SPM_LOGGER.warning(f"Websocket disconnected for user {username}\
                     Trying to reconnect...")
                 # await websocket_manager.connect(websocket=websocket)
-                await websocket_manager.connect_user(websocket=websocket)
+                await websocket_manager.connect_user(websocket=websocket,
+                                                     username=username)
                 
     except WebSocketDisconnect:
         # await websocket_manager.connect_user(websocket=websocket)
         # await websocket_manager.disconnect(websocket=websocket,
         #                                    username=username)
+        await websocket_manager.disconnect_user(username=username)
         print("Websocket Disconnected....")
         
 @router.websocket("/monitor/user/{username}")

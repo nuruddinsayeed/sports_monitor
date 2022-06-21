@@ -13,8 +13,11 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 
 from typing import Dict
 from fastapi import WebSocket
+from app.controllers.db_controllers import MongoOperations
 
 from app.helpers.excepitons import AlreadlyConnected
+from app.Activity import activity_controller
+from app.settings import config_vars
 
 
 class ConnectionManager:
@@ -24,8 +27,14 @@ class ConnectionManager:
         # self.active_monitors: List[WebSocket] = []
         self.user_monitor: Dict[str, WebSocket] = {}
         
-    async def connect_user(self, websocket: WebSocket) -> None:
+    async def connect_user(self, websocket: WebSocket, username: str) -> None:
         await websocket.accept()
+        
+        # add user to active user collection
+        mongo_op = MongoOperations(
+            collection=config_vars.MONITOR_COLLECTION_NAME)
+        activity_controller.add_active_user(username=username,
+                                            mongo_op=mongo_op)
     
     async def connect_moinitor(self, websocket: WebSocket, username: str):
         await websocket.accept()
@@ -42,4 +51,11 @@ class ConnectionManager:
         
     async def disconnect_monitor(self, websocket: WebSocket, username: str):
         self.user_monitor.pop(username, None)
+    
+    async def disconnect_user(self, username: str):
+        # remove user from active user datbase
+        mongo_op = MongoOperations(
+            collection=config_vars.MONITOR_COLLECTION_NAME)
+        activity_controller.remove_active_user(username=username,
+                                               mongo_op=mongo_op)
 

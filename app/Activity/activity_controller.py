@@ -16,6 +16,7 @@ from pymongo.collection import Collection
 from pymongo.errors import WriteError
 
 from app.models.activity_models import ActivityInfo, ActivityUserDB
+from app.controllers.db_controllers import MongoOperations
 from app.settings import config_vars, mongo_conf
 from app.settings import mongo_conf
 from app.settings.configs import SETTINGS
@@ -31,8 +32,6 @@ def insert_user_activity(user_mdb_id: str, activity_info: ActivityInfo):
     # create a user info inside user_activity collection
     collection = get_activity_collection()
 
-    # curr_date_hour = datetime.utcnow().replace(minute=0, microsecond=0)
-    # _id = ObjectId().from_datetime(generation_time=curr_date_hour)
 
     # generate activity for user
     user_activity = ActivityUserDB(user_id=user_mdb_id,
@@ -46,17 +45,8 @@ def upload_activity(activity_data: ActivityInfo):
 
     curr_date_hour = datetime.utcnow().replace(minute=0, second=0,
                                                microsecond=0)
-    # bucket_ob_id = ObjectId().from_datetime(generation_time=curr_date_hour)
-    # bucket_ob_id = ObjectId(f'activitybucket-{user_mdb_id}-{round(curr_date_hour.timestamp())}')
-    # bucket_ob_id = ObjectId(hex(12545896587458522))
+
     bucket_ob_id = ObjectId()
-
-    # ret = collection.update_one({"user_id": user_mdb_id },
-    #                       {"$push": {"activity_buckets": {**activity_data.dict()}}})
-
-    # collection.insert_one({"user_id": user_mdb_id,"activity_buckets":[{"_id": bucket_ob_id, "create_at":curr_date_hour, "activities": []}] })
-    # ret = collection.update_one({"user_id": user_mdb_id, "activity_buckets._id": bucket_ob_id },
-    #                     {"$push": {"activity_buckets.$.activities": activity_data.dict()}})
 
     try:
         collection.update_one(
@@ -78,30 +68,8 @@ def upload_activity(activity_data: ActivityInfo):
                                    "activities": [activity_data.dict(), ]}]}
         )
 
-    # collection.update_one(
-    #     filter={
-    #         "user_id": user_mdb_id
-    #     },
-    #     update={
-    #         "$push": {
-    #             "activity_buckets.$[i].activities": activity_data.dict()}
-    #     },
-    #     array_filters=[{'i.create_at': curr_date_hour},],
-    #     upsert=True
-    #     )
+def add_active_user(username: str, mongo_op: MongoOperations):
+    mongo_op.insert_one({"username": username})
 
-    # collection.update_one(
-    #     filter={
-    #         "user_id": user_mdb_id,
-    #     },
-    #     update={
-    #         "$push": {
-    #             "activities": activity_data.dict()}
-    #     },
-    #     upsert=True
-    #     )
-
-    # collection.insert_one({"user_id": user_mdb_id, **activity_data.dict()})
-
-    # find = collection.find_one({"user_id": user_mdb_id, "activity_buckets.create_at": curr_date_hour })
-    # print(f'============== {find} id {curr_date_hour}')
+def remove_active_user(username: str, mongo_op: MongoOperations):
+    mongo_op.delete_many({"username": username})

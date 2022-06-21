@@ -10,6 +10,7 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
+from typing import List
 from app.models.auth_models import UserInDb
 from app.settings import config_vars, configs
 from app.settings.mongo_conf import get_nosql_client
@@ -39,26 +40,30 @@ def format_mongo_ids(nested_dicts: dict):
 
 class MongoOperations:
     
-    def __init__(self, db_name: str = SETTINGS.spm_mongo_db_name) -> None:
+    def __init__(self, collection: str,
+                 db_name: str = SETTINGS.spm_mongo_db_name) -> None:
         self.db = get_nosql_client()[db_name]
+        self.collection = self.db.get_collection(collection)
         
-    def get_user_collection(self):
-        return self.db.get_collection(config_vars.USER_COLLECTION_NAME)
-        
-    def get_user(self, user_mail: str) -> UserInDb:
-        collection = self.get_user_collection()
-        row_data = collection.find_one({"user_email": user_mail})
-        
-        if row_data is not None:
-            user_info = format_mongo_ids(row_data)
-            return UserInDb(**user_info)
-        return None
+    # def get_user_collection(self):
+    #     return self.db.get_collection(config_vars.USER_COLLECTION_NAME)
     
-    def add_user(self, user_data: UserInDb):
-        # collection = self.db.users
-        collection = self.get_user_collection()
-        try:
-            response = collection.insert_one(user_data.dict())
-            return {"id_inserted": str(response.inserted_id)}
-        except Exception as e:
-            raise Exception(f"{e}")
+    def insert_one(self, data: dict):
+        self.collection.insert_one(data)
+    
+    def delete_one(self, filter: dict):
+        self.collection.delete_one(filter=filter)
+        
+    def delete_many(self, filter: dict):
+        self.collection.delete_many(filter = filter)
+    
+    def insert_many(self, data: List[dict]):
+        self.collection.insert_many(data)
+    
+    def find_all(self):
+        all_documents = self.collection.find({})
+        return format_mongo_ids(all_documents)
+        
+    def find_one(self, filter: dict):
+        one_document = self.collection.find_one(filter=filter)
+        return format_mongo_ids(one_document)

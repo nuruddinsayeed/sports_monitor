@@ -83,6 +83,12 @@ async def startup_event():
         db_mongo.create_collection(config_vars.ACTIVITY_COLLECTION_NAME)
     except CollectionInvalid as e:
         SPM_LOGGER.warning(e)
+    
+    # Create Monitor Colleciton to Mongo
+    try:
+        db_mongo.create_collection(config_vars.MONITOR_COLLECTION_NAME)
+    except CollectionInvalid as e:
+        SPM_LOGGER.warning(e)
         
     # Create MongoDB Collections indexes, for uniqe username
     try:

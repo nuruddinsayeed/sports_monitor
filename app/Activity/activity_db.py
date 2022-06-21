@@ -16,7 +16,6 @@ import pymongo
 from datetime import datetime
 from bson import ObjectId
 from pymongo.collection import Collection
-from pymongo.errors import WriteError
 from app.controllers import db_controllers
 from app.helpers.excepitons import NotFoundError
 

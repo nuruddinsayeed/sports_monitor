@@ -65,3 +65,10 @@ async def index(request: Request, username: str):
             "accumulator_data_y": y,
             "accumulator_data_z": z,}
     return templates.TemplateResponse('activity_view.html', data)
+
+# Active Users Page
+# @router.get("/active-users", name="active-users",)
+# async def index(request: Request):
+#     """Renders the login page""" TODO Complete this
+
+#     return templates.TemplateResponse('monitor_view.html', {'request': request})
