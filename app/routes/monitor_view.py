@@ -11,9 +11,13 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from starlette.templating import Jinja2Templates
 from starlette.requests import Request
+from app.Activity import activity_db
+
+from app.Activity import activity_db
+from app.controllers import auth_control
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
@@ -30,14 +34,33 @@ async def index(request: Request):
 
     return templates.TemplateResponse('monitor_view.html', {'request': request})
 
-@router.get("/activity-detail", name="activity_detail",)
-async def index(request: Request):
+@router.get("/activity-detail/{username}", name="activity_detail",)
+async def index(request: Request, username: str):
     """Renders the login page"""
+    
+    user = auth_control.verify_username(username=username)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User Not Found"
+        )
+        
+    activities = activity_db.get_latest_activities(user_id=user.id)
+    x, y, z = [], [], []
+    for activity in activities[-180:]:
+        x.append(activity.x)
+        y.append(activity.y)
+        z.append(activity.z)
+    if len(x) < 180:
+        empty_vals = [0 for _ in range(180-len(x))]
+        x = [*empty_vals, *x]
+        y = [*empty_vals, *y]
+        z = [*empty_vals, *z]
 
     data = {'request': request, 
-            'username': 'Syeed',
+            'username': user.username,
             "graph_labels": [i for i in range(180)],
-            "accumulator_data_x": [0 for _ in range(180)],
-            "accumulator_data_y": [0 for _ in range(180)],
-            "accumulator_data_z": [0 for _ in range(180)],}
+            "accumulator_data_x": x,
+            "accumulator_data_y": y,
+            "accumulator_data_z": z,}
     return templates.TemplateResponse('activity_view.html', data)

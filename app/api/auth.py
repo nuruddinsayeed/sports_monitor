@@ -13,7 +13,6 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from pymongo import MongoClient
-from app.Activity.activity_db import get_n_activity
 
 from app.settings.configs import SETTINGS
 from app.models.auth_models import Token, User
@@ -90,7 +89,3 @@ def get_current_user(
     user_info = user.dict()
     user_info.pop("hashed_password")
     return user_info
-
-@router.get("/activity")
-def get_activity():
-    return get_last_activities()

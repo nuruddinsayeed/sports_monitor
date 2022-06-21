@@ -11,6 +11,7 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
 from tkinter import E
+from typing import List
 import pymongo
 from datetime import datetime
 from bson import ObjectId
@@ -20,6 +21,7 @@ from app.controllers import db_controllers
 from app.helpers.excepitons import NotFoundError
 
 from app.models.activity_models import ActivityInfo, ActivityUserDB
+from app.routes.websockets_route import get
 from app.settings import config_vars, mongo_conf
 from app.settings import mongo_conf
 from app.settings.configs import SETTINGS
@@ -143,8 +145,11 @@ def upload_activity(activity_data: ActivityInfo):
     # find = collection.find_one({"user_id": user_mdb_id, "activity_buckets.create_at": curr_date_hour })
     # print(f'============== {find} id {curr_date_hour}')
 
-# def get_n_activity(user_id: str, n: int = 180):
-def get_last_activities(user_id: str = "62af6a1f5be27eb81a61db95"):
+
+def validate_activities(activities: list) -> List[ActivityInfo]:
+    return [ActivityInfo(**activity) for activity in activities]
+
+def get_latest_activities(user_id: str) -> List[ActivityInfo]:
     
     """Returns n number of activity of the user"""
     
@@ -172,8 +177,12 @@ def get_last_activities(user_id: str = "62af6a1f5be27eb81a61db95"):
     formated_acivities =  db_controllers.format_mongo_ids(res)
     
     try:
-        activities = formated_acivities["activity_buckets"]["activities"]
+        activities: list = formated_acivities["activity_buckets"]["activities"]
     except KeyError:
         raise NotFoundError("No User Activity found") 
-
-    return activities
+    
+    # TODO: Check if this can be done in Mongo query
+    activities.sort(key=lambda x: x.get("created_at"),
+                                        reverse=True)
+    validated_activities = validate_activities(activities)
+    return validated_activities
