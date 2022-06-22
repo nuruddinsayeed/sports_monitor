@@ -11,6 +11,7 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
 from datetime import datetime
+from typing import List
 from bson import ObjectId
 from pymongo.collection import Collection
 from pymongo.errors import WriteError
@@ -72,12 +73,17 @@ def add_active_user(username: str, activity_type:str, mongo_op: MongoOperations)
     user = ActiveUser(username=username, activity_type=activity_type,
                       active_now=True)
     # mongo_op.insert_one(user.dict())
-    mongo_op.update_one(filter={"username": username}, 
-                        update=user.dict(), upsert=True)
+    mongo_op.update_one(filter_data={"username": username},
+                        update_data=user.dict(), upsert=True)
 
-def remove_active_user(username: str, activity_type:str,
-                       mongo_op: MongoOperations):
-    user = ActiveUser(username=username, activity_type=activity_type)
+def remove_active_user(username: str, mongo_op: MongoOperations):
+    # user = ActiveUser(username=username, activity_type=activity_type)
     # mongo_op.delete_many(user.dict())
-    mongo_op.update_one(filter={"username": username}, 
-                        update={"active_now": False})
+    mongo_op.update_one(filter_data={"username": username},
+                        update_data={"active_now": False})
+    
+def get_all_active_users(mongo_op: MongoOperations) -> List[ActiveUser]:
+    
+    all_users = mongo_op.find_many(filter_data={"active_now": True})
+    
+    return [ActiveUser(**user) for user in all_users]

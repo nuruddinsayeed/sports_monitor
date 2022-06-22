@@ -14,10 +14,12 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 from fastapi import APIRouter, HTTPException, status
 from starlette.templating import Jinja2Templates
 from starlette.requests import Request
-from app.Activity import activity_db
+from app.Activity import activity_controller, activity_db
 
 from app.Activity import activity_db
 from app.controllers import auth_control
+from app.controllers.db_controllers import MongoOperations
+from app.settings import config_vars
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
@@ -71,5 +73,9 @@ async def index(request: Request, username: str):
 async def active_users(request: Request):
     """Renders the Active users page"""
     
-    data = {'request': request}
+    mongo_op = MongoOperations(
+        collection_name=config_vars.MONITOR_COLLECTION_NAME)
+    active_users = activity_controller.get_all_active_users(mongo_op=mongo_op)
+    
+    data = {'request': request, 'active_users': active_users}
     return templates.TemplateResponse('active_users.html', data)

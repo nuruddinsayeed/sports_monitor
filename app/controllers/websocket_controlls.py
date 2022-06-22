@@ -34,7 +34,7 @@ class ConnectionManager:
         
         # add user to active user collection
         mongo_op = MongoOperations(
-            collection=config_vars.MONITOR_COLLECTION_NAME)
+            collection_name=config_vars.MONITOR_COLLECTION_NAME)
         activity_controller.add_active_user(username=username,
                                             mongo_op=mongo_op,
                                             activity_type=activity_type)
@@ -58,7 +58,7 @@ class ConnectionManager:
     async def disconnect_user(self, username: str, activity_type: str):
         # remove user from active user datbase
         mongo_op = MongoOperations(
-            collection=config_vars.MONITOR_COLLECTION_NAME)
+            collection_name=config_vars.MONITOR_COLLECTION_NAME)
         activity_controller.remove_active_user(username=username,
                                                mongo_op=mongo_op,
                                                activity_type=activity_type)

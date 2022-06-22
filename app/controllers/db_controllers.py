@@ -12,11 +12,13 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 
 from turtle import update
 from typing import List
+from app.models.activity_models import ActiveUser
 from app.models.auth_models import UserInDb
 from app.settings import config_vars, configs
 from app.settings.mongo_conf import get_nosql_client
 
 SETTINGS = configs.get_settings()
+
 
 def format_mongo_ids(nested_dicts: dict):
     """
@@ -36,39 +38,45 @@ def format_mongo_ids(nested_dicts: dict):
             nested_dicts[key] = new_arr
         elif key == "_id":
             nested_dicts[key] = str(val)
-            
+
     return nested_dicts
 
+
 class MongoOperations:
-    
-    def __init__(self, collection: str,
+
+    def __init__(self, collection_name: str,
                  db_name: str = SETTINGS.spm_mongo_db_name) -> None:
         self.db = get_nosql_client()[db_name]
-        self.collection = self.db.get_collection(collection)
-        
+        self.collection = self.db.get_collection(collection_name)
+
     # def get_user_collection(self):
     #     return self.db.get_collection(config_vars.USER_COLLECTION_NAME)
-    
+
     def insert_one(self, data: dict):
         self.collection.insert_one(data)
-        
-    def update_one(self, filter: dict, update: dict, upsert: bool = True):
-        self.collection.update_one(filter=filter, 
-                                   update={"$set": update}, upsert=upsert)
-    
-    def delete_one(self, filter: dict):
-        self.collection.delete_one(filter=filter)
-        
-    def delete_many(self, filter: dict):
-        self.collection.delete_many(filter = filter)
-    
+
+    def update_one(self, filter_data: dict, update_data: dict, upsert: bool = True):
+        self.collection.update_one(filter=filter_data,
+                                   update={"$set": update_data}, upsert=upsert)
+
+    def delete_one(self, filter_data: dict):
+        self.collection.delete_one(filter=filter_data)
+
+    def delete_many(self, filter_data: dict):
+        self.collection.delete_many(filter=filter_data)
+
     def insert_many(self, data: List[dict]):
         self.collection.insert_many(data)
-    
-    def find_all(self):
-        all_documents = self.collection.find({})
-        return format_mongo_ids(all_documents)
-        
-    def find_one(self, filter: dict):
-        one_document = self.collection.find_one(filter=filter)
+
+    # def find_all(self):
+    #     all_documents = self.collection.find({})
+    #     return format_mongo_ids(all_documents)
+
+    def find_one(self, filter_data: dict):
+        one_document = self.collection.find_one(filter=filter_data)
         return format_mongo_ids(one_document)
+
+    def find_many(self, filter_data: dict):
+        all_docs = self.collection.find(filter_data)
+        all_docs = [format_mongo_ids(doc) for doc in all_docs]
+        return all_docs
