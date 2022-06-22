@@ -10,6 +10,7 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
+from turtle import update
 from typing import List
 from app.models.auth_models import UserInDb
 from app.settings import config_vars, configs
@@ -50,6 +51,10 @@ class MongoOperations:
     
     def insert_one(self, data: dict):
         self.collection.insert_one(data)
+        
+    def update_one(self, filter: dict, update: dict, upsert: bool = True):
+        self.collection.update_one(filter=filter, 
+                                   update={"$set": update}, upsert=upsert)
     
     def delete_one(self, filter: dict):
         self.collection.delete_one(filter=filter)

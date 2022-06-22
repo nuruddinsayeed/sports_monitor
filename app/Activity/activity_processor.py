@@ -38,6 +38,9 @@ def validate_data(username: str, data: str) -> ActivityInfo:
 
 def process_activity(username: str, activity_type: str,
                      data: str) -> str:
+    # TODO: Detect Alerm
+    
+    
     # validate dataq
     validated_data = validate_data(username=username, data=data)
     db_data = ActivityInfo(**validated_data.dict())

@@ -46,4 +46,6 @@ class ActiveUser(BaseModel):
     _id: ObjectId
     username: str
     activity_type:str
-    object_roll: str = "ActiveUser" 
+    object_roll: str = "ActiveUser"
+    active_now: bool = False
+    activity_weight: int = 30

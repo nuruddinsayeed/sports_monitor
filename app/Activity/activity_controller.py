@@ -69,10 +69,15 @@ def upload_activity(activity_data: ActivityInfo):
         )
 
 def add_active_user(username: str, activity_type:str, mongo_op: MongoOperations):
-    user = ActiveUser(username=username, activity_type=activity_type)
-    mongo_op.insert_one(user.dict())
+    user = ActiveUser(username=username, activity_type=activity_type,
+                      active_now=True)
+    # mongo_op.insert_one(user.dict())
+    mongo_op.update_one(filter={"username": username}, 
+                        update=user.dict(), upsert=True)
 
-def remove_active_user(username: str, activity_type:str, mongo_op: MongoOperations):
+def remove_active_user(username: str, activity_type:str,
+                       mongo_op: MongoOperations):
     user = ActiveUser(username=username, activity_type=activity_type)
-    mongo_op.insert_one(user.dict())
-    mongo_op.delete_many(user.dict())
+    # mongo_op.delete_many(user.dict())
+    mongo_op.update_one(filter={"username": username}, 
+                        update={"active_now": False})
