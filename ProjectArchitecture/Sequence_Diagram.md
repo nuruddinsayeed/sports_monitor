@@ -10,8 +10,8 @@ sequenceDiagram
         User-->>Server: Sends User Activity in a specifique format
         Server-->>User: Verify the data with predefined data mondel and send user the confirmation
         Server->>Monitor: Sends the data to live monitor via Web Socket
-        Server->>ActivityProcess: ActivityProcess process the data
-        ActivityProcess->>Monitor: Send the Alerm if any dangerous event detected by algorithm
+        Server->>ActivityProcess(Server): ActivityProcess process the data
+        ActivityProcess(Server)->>Monitor: Send the Alerm if any dangerous event detected by algorithm
     end
 
     User-->>Server: User Disconnects with the server and WebSocket
