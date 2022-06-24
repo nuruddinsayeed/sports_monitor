@@ -72,6 +72,11 @@ async def running_ws(websocket: WebSocket, username: str):
                 
                 data = await websocket.receive_text()
                 print(f'user sayes {data}')
+            else:
+                SPM_LOGGER.warning(f"Websocket disconnected for Monior\
+                    Trying to reconnect...")
+                await websocket_manager.connect_moinitor(websocket=websocket,
+                                             username=username)
                    
     except WebSocketDisconnect:
         await websocket_manager.disconnect_monitor(websocket=websocket,

@@ -60,6 +60,5 @@ class ConnectionManager:
         mongo_op = MongoOperations(
             collection_name=config_vars.MONITOR_COLLECTION_NAME)
         activity_controller.remove_active_user(username=username,
-                                               mongo_op=mongo_op,
-                                               activity_type=activity_type)
+                                               mongo_op=mongo_op)
 
