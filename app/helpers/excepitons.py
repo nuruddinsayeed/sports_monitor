@@ -31,3 +31,10 @@ class AlreadlyConnected(Exception):
     def __init__(self, message: str) -> None:
         err = f"Alreadly Connected. {message}"
         super().__init__(err)
+        
+class Invalid(Exception):
+    """Custom Exception for when data is not found"""
+
+    def __init__(self, message: str) -> None:
+        err = f"Invalid. {message}"
+        super().__init__(err)
