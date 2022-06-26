@@ -15,6 +15,8 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
 
+from app.alerm.activity_waights import ActivityStatus
+
 
 class ActivityData(BaseModel):
     x: float
@@ -49,3 +51,4 @@ class ActiveUser(BaseModel):
     object_roll: str = "ActiveUser"
     active_now: bool = False
     activity_weight: int = 30
+    activity_status: ActivityStatus = ActivityStatus.normal_activity

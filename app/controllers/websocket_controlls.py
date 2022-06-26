@@ -16,7 +16,7 @@ from fastapi import WebSocket
 from app.controllers.db_controllers import MongoOperations
 
 from app.helpers.excepitons import AlreadlyConnected
-from app.Activity import activity_controller
+from app.Activity import activity_user_db
 from app.settings import config_vars
 
 
@@ -35,7 +35,7 @@ class ConnectionManager:
         # add user to active user collection
         mongo_op = MongoOperations(
             collection_name=config_vars.MONITOR_COLLECTION_NAME)
-        activity_controller.add_active_user(username=username,
+        activity_user_db.add_active_user(username=username,
                                             mongo_op=mongo_op,
                                             activity_type=activity_type)
     
@@ -59,6 +59,6 @@ class ConnectionManager:
         # remove user from active user datbase
         mongo_op = MongoOperations(
             collection_name=config_vars.MONITOR_COLLECTION_NAME)
-        activity_controller.remove_active_user(username=username,
-                                               mongo_op=mongo_op)
+        activity_user_db.remove_active_user(username=username,
+                                            mongo_op=mongo_op)
 

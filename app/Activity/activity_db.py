@@ -10,7 +10,6 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
-from tkinter import E
 from typing import List
 import pymongo
 from datetime import datetime
