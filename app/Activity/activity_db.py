@@ -36,9 +36,6 @@ def insert_user_activity(user_mdb_id: str, activity_info: ActivityInfo):
     # create a user info inside user_activity collection
     collection = get_activity_collection()
 
-    # curr_date_hour = datetime.utcnow().replace(minute=0, microsecond=0)
-    # _id = ObjectId().from_datetime(generation_time=curr_date_hour)
-
     # generate activity for user
     user_activity = ActivityUserDB(user_id=user_mdb_id,
                                    activity_buckets=[activity_info, ])
@@ -51,17 +48,7 @@ def upload_activity(activity_data: ActivityInfo):
 
     curr_date_hour = datetime.utcnow().replace(minute=0, second=0,
                                                microsecond=0).timestamp()
-    # bucket_ob_id = ObjectId().from_datetime(generation_time=curr_date_hour)
-    # bucket_ob_id = ObjectId(f'activitybucket-{user_mdb_id}-{round(curr_date_hour.timestamp())}')
-    # bucket_ob_id = ObjectId(hex(12545896587458522))
     bucket_ob_id = ObjectId()
-
-    # ret = collection.update_one({"user_id": user_mdb_id },
-    #                       {"$push": {"activity_buckets": {**activity_data.dict()}}})
-
-    # collection.insert_one({"user_id": user_mdb_id,"activity_buckets":[{"_id": bucket_ob_id, "create_at":curr_date_hour, "activities": []}] })
-    # ret = collection.update_one({"user_id": user_mdb_id, "activity_buckets._id": bucket_ob_id },
-    #                     {"$push": {"activity_buckets.$.activities": activity_data.dict()}})
 
     total_document = collection.count_documents({
                 "user_id": activity_data.user_id,
@@ -94,55 +81,6 @@ def upload_activity(activity_data: ActivityInfo):
             },
             upsert=True
         )
-    
-    # try:
-    #     collection.update_one(
-    #         filter={
-    #             "user_id": activity_data.user_id,
-    #             "activity_buckets.create_at": curr_date_hour
-    #         },
-    #         update={
-    #             "$push": {
-    #                 "activity_buckets.$.activities": activity_data.dict()}
-    #         },
-    #         upsert=True
-    #     )
-    # except WriteError as e:
-    #     raise e
-    #     collection.insert_one(
-    #         {"user_id": activity_data.user_id,
-    #          "activity_buckets": [{"_id": bucket_ob_id,
-    #                                "create_at": curr_date_hour,
-    #                                "activities": [activity_data.dict(), ]}]}
-    #     )
-
-    # collection.update_one(
-    #     filter={
-    #         "user_id": user_mdb_id
-    #     },
-    #     update={
-    #         "$push": {
-    #             "activity_buckets.$[i].activities": activity_data.dict()}
-    #     },
-    #     array_filters=[{'i.create_at': curr_date_hour},],
-    #     upsert=True
-    #     )
-
-    # collection.update_one(
-    #     filter={
-    #         "user_id": user_mdb_id,
-    #     },
-    #     update={
-    #         "$push": {
-    #             "activities": activity_data.dict()}
-    #     },
-    #     upsert=True
-    #     )
-
-    # collection.insert_one({"user_id": user_mdb_id, **activity_data.dict()})
-
-    # find = collection.find_one({"user_id": user_mdb_id, "activity_buckets.create_at": curr_date_hour })
-    # print(f'============== {find} id {curr_date_hour}')
 
 
 def validate_activities(activities: list) -> List[ActivityInfo]:

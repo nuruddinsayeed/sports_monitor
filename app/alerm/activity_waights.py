@@ -34,15 +34,17 @@ class AlermWeights(Enum):
     level_four = 400
     
 class ActivityStatus(Enum):
-    normal_activity = "Normal Activity"
-    abnormal_activity = "Abnormal Activity"
-    dangerous_activity = "Dangerous Activity"
+    normal_activity = "normalActivity"
+    abnormal_activity = "abnormalActivity"
+    dangerous_activity = "dangerousActivity"
+    disconnected = "disconnected"
     
 class WeightUpdate:
     
     def sitting (curr_w: int, activity_status: ActivityStatus) -> int:
         
-        if activity_status is ActivityStatus.normal_activity:
+        if activity_status is ActivityStatus.normal_activity \
+            or activity_status is ActivityStatus.disconnected:
             return curr_w + ActivityWeights.sitting.value
         if activity_status is ActivityStatus.abnormal_activity:
             return AlermWeights.level_three.value
@@ -62,7 +64,8 @@ class WeightUpdate:
         return curr_w
     
     def walking(curr_w: int, activity_status: ActivityStatus) -> int:
-        if activity_status is ActivityStatus.normal_activity:
+        if activity_status is ActivityStatus.normal_activity\
+            or activity_status is ActivityStatus.disconnected:
             return curr_w
         if activity_status is ActivityStatus.abnormal_activity:
             return AlermWeights.level_three.value
@@ -72,7 +75,8 @@ class WeightUpdate:
         raise Invalid(f"Invalid Activity Status {activity_status}")
 
     def standing(curr_w: int, activity_status: ActivityStatus) -> int:
-        if activity_status is ActivityStatus.normal_activity:
+        if activity_status is ActivityStatus.normal_activity\
+            or activity_status is ActivityStatus.disconnected:
             return curr_w + ActivityWeights.standing.value
         if activity_status is ActivityStatus.abnormal_activity:
             return AlermWeights.level_three.value
