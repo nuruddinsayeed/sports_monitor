@@ -51,4 +51,10 @@ class ActiveUser(BaseModel):
     object_roll: str = "ActiveUser"
     active_now: bool = False
     activity_weight: int = 30
-    activity_status: ActivityStatus = ActivityStatus.normal_activity
+    activity_status: ActivityStatus | str = ActivityStatus.normal_activity.value
+    
+    def validate_activy_statys(cls, v):
+        if not isinstance(v, ActivityStatus):
+            raise ValueError(f"acitivity status must be Type {ActivityStatus}")
+        
+        return v.value

@@ -39,7 +39,7 @@ class ActivityStatus(Enum):
     dangerous_activity = "dangerousActivity"
     disconnected = "disconnected"
     
-class WeightUpdate:
+class WeightCalculator:
     
     def sitting (curr_w: int, activity_status: ActivityStatus) -> int:
         

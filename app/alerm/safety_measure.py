@@ -38,6 +38,7 @@ class AlermController:
     
     def is_alerm():
         # checks if an alerm should be generated
+        # TODO: calculate weights and return if alerm
         pass
     
     # def tes():
