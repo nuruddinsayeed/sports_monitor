@@ -12,7 +12,7 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from bson.objectid import ObjectId
 
 from app.alerm.activity_waights import ActivityStatus
@@ -53,7 +53,8 @@ class ActiveUser(BaseModel):
     activity_weight: int = 30
     activity_status: ActivityStatus | str = ActivityStatus.normal_activity.value
     
-    def validate_activy_statys(cls, v):
+    @validator('activity_status')
+    def validate_activy_status(cls, v):
         if not isinstance(v, ActivityStatus):
             raise ValueError(f"acitivity status must be Type {ActivityStatus}")
         

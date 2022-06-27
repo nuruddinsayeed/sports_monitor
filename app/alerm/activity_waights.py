@@ -41,6 +41,7 @@ class ActivityStatus(Enum):
     
 class WeightCalculator:
     
+    @staticmethod
     def sitting (curr_w: int, activity_status: ActivityStatus) -> int:
         
         if activity_status is ActivityStatus.normal_activity \
@@ -53,16 +54,19 @@ class WeightCalculator:
         
         raise Invalid(f"Invalid Activity Status {activity_status}")
         
-    
+    @staticmethod
     def jogging(curr_w: int) -> int:
         return curr_w
     
+    @staticmethod
     def downstairs(curr_w: int) -> int:
         return curr_w
     
+    @staticmethod
     def upstairs(curr_w: int) -> int:
         return curr_w
     
+    @staticmethod
     def walking(curr_w: int, activity_status: ActivityStatus) -> int:
         if activity_status is ActivityStatus.normal_activity\
             or activity_status is ActivityStatus.disconnected:
@@ -74,6 +78,7 @@ class WeightCalculator:
         
         raise Invalid(f"Invalid Activity Status {activity_status}")
 
+    @staticmethod
     def standing(curr_w: int, activity_status: ActivityStatus) -> int:
         if activity_status is ActivityStatus.normal_activity\
             or activity_status is ActivityStatus.disconnected:
@@ -85,11 +90,14 @@ class WeightCalculator:
         
         raise Invalid(f"Invalid Activity Status {activity_status}")
     
+    @staticmethod
     def disconnected(curr_w: int) -> int:
         return curr_w + ActivityWeights.disconnected.value
     
+    @staticmethod
     def abnormal(curr_w: int) -> int:
         return curr_w + ActivityWeights.abnormal.value
     
+    @staticmethod
     def fall_detected(curr_w: int) -> int:
         return curr_w + ActivityWeights.fall.value
