@@ -82,6 +82,11 @@ class WeightCalculator:
     def standing(curr_w: int, activity_status: ActivityStatus) -> int:
         if activity_status is ActivityStatus.normal_activity\
             or activity_status is ActivityStatus.disconnected:
+            
+            if curr_w > AlermWeights.level_one.value:
+                # donot update if alerm is already generated
+                    return curr_w
+                
             return curr_w + ActivityWeights.standing.value
         if activity_status is ActivityStatus.abnormal_activity:
             return AlermWeights.level_three.value

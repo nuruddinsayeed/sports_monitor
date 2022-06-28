@@ -45,6 +45,20 @@ def validate_data(username: str, data: str) -> Tuple[ActivityInfo,
 
     return valideted_activity_data, activity_status
 
+def controll_alerm(username: str, new_activity_status: ActivityStatus,
+                   new_activity_cls: str):
+    
+    # Detect and handle alerm
+    alerm_controller = AlermController()
+    is_alerm = alerm_controller.is_alerm(username=username,
+                                        new_activity_status=new_activity_status,
+                                        new_activity_cls=new_activity_cls)
+    
+    if is_alerm:
+        # triger alerm by its level
+        alerm_weight = alerm_controller.get_alerm_level()
+        print(f"-------------------------> {alerm_weight}")
+
 
 def process_activity(username: str, activity_type: str,
                      data: str) -> str:
@@ -56,11 +70,8 @@ def process_activity(username: str, activity_type: str,
     # store to mongoDB
     activity_db.upload_activity(activity_data=db_data)
     
-    # Detect and handle alerm
-    alerm_controller = AlermController()
-    alerm_controller.is_alerm(username=username,
-                              new_activity_status=act_status,
-                              new_activity_cls=validated_data.activity_class)
+    controll_alerm(username=username, new_activity_status=act_status,
+                   new_activity_cls=validated_data.activity_class)
 
     json_data = json.dumps(validated_data.dict(), default=str)
     print(validated_data, username, activity_type) # TODO: Delete this line

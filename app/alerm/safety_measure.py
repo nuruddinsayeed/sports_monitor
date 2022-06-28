@@ -28,6 +28,7 @@ class AlermController:
         self.mongo_op = mongo_op if mongo_op else get_monitor_mongo_op()
         self.weight_calculator = weight_calculator if weight_calculator else \
             WeightCalculator()
+        self.alerm_weight = 0
     
     def safety_info_from_db(self, username: str) -> ActiveUser:
         # Gets existing safety info from db
@@ -47,6 +48,16 @@ class AlermController:
                                      "activity_status":activity_status.value,
                                      "activity_weight":activity_weight
                                  })
+        
+    def get_alerm_level(self):
+        alerm_weight = None
+        
+        for weight_obj in AlermWeights:
+            if weight_obj.value < self.alerm_weight:
+                alerm_weight = weight_obj
+            else:
+                return alerm_weight
+        return alerm_weight
     
     def is_alerm(self, username: str, new_activity_status: ActivityStatus,
                  new_activity_cls: str):
@@ -72,12 +83,11 @@ class AlermController:
         new_weight = self.updated_weight(curr_weight=int(curr_info.activity_weight),
                                          new_activity_cls=new_activity_cls,
                                          activity_status=new_activity_status)
+        self.alerm_weight = new_weight
         
         self.update_info_to_db(username=username, activity_status=new_status, activity_weight=new_weight)
         
         if new_weight > AlermWeights.level_one.value:
-            #TODO: trigger alerm
-            print("alrem -------------------------------->>>>>>>")
             return True
         return False
         
