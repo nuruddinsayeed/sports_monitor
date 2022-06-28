@@ -50,7 +50,7 @@ class ActiveUser(BaseModel):
     activity_type:str
     object_roll: str = "ActiveUser"
     active_now: bool = False
-    activity_weight: int = 30
+    activity_weight: int = 0
     activity_status: ActivityStatus | str = ActivityStatus.normal_activity.value
     
     @validator('activity_status')

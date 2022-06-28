@@ -10,6 +10,8 @@ Modified By: Syeed (nur.syeed@stud.fra-uas.de>)
 Copyright 2022 - 2022 This Module Belongs to Open source project
 '''
 
+# TODO: Activity Class are not dynamic so make it
+
 from app.alerm.activity_waights import ActivityStatus, AlermWeights, WeightCalculator
 from app.controllers.db_controllers import MongoOperations
 from app.models.activity_models import ActiveUser
@@ -42,13 +44,25 @@ class AlermController:
         # Update newly measured info to db
         self.mongo_op.update_one(filter_data={"username": username},
                                  update_data={
-                                     "activity_status":activity_status,
+                                     "activity_status":activity_status.value,
                                      "activity_weight":activity_weight
                                  })
     
     def is_alerm(self, username: str, new_activity_status: ActivityStatus,
                  new_activity_cls: str):
-        # checks if an alerm should be generated
+        """Detects alerm and mantain database updates
+
+        Args:
+            username (str): username of the user
+            new_activity_status (ActivityStatus): realtime users activity status
+            new_activity_cls (str): activity classes string like 
+            sitting, jogging, downstairs, walking, standing, disconnected,
+            abnormal, fall_detected
+
+        Returns:
+            bool: is alerm or not
+        """
+        
         curr_info = self.safety_info_from_db(username=username)
         
         new_status = self.updated_acivity_status(
