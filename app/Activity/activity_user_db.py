@@ -72,15 +72,33 @@ from app.settings.configs import SETTINGS
 def add_active_user(username: str, activity_type:str, mongo_op: MongoOperations):
     user = ActiveUser(username=username, activity_type=activity_type,
                       active_now=True)
-    # mongo_op.insert_one(user.dict())
+    user_dict = user.dict()
+    
+    
+    current_info = mongo_op.find_one({"username": username})
+    if current_info:
+        diff = datetime.utcnow() - datetime.strptime(
+            current_info.get("last_update"), '%d/%m/%Y %H:%M:%S'
+        )
+        diff_hr = diff.total_seconds() / 3600
+        if diff_hr < 2: # user was connected 2 hour ago
+            # dont reset
+            user_dict.pop("activity_weight", None)
+            
+        
+    
     mongo_op.update_one(filter_data={"username": username},
-                        update_data=user.dict(), upsert=True)
+                        update_data=user_dict, upsert=True)
 
 def remove_active_user(username: str, mongo_op: MongoOperations):
     # user = ActiveUser(username=username, activity_type=activity_type)
     # mongo_op.delete_many(user.dict())
+    data = {
+        "active_now": False,
+        "last_update": datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S')
+    }
     mongo_op.update_one(filter_data={"username": username},
-                        update_data={"active_now": False})
+                        update_data=data)
     
 def get_all_active_users(mongo_op: MongoOperations) -> List[ActiveUser]:
     

@@ -15,7 +15,7 @@ async def send_to_ws():
                 'x':random.randint(1,100)/10,
                 'y':random.randint(1,100)/10,
                 'z': random.randint(1,100)/10,
-                'activity_class': 'walking',
+                'activity_class': 'standing',
                 'activityStatus': 'normalActivity'
             })
             print("sending rand ", dup)

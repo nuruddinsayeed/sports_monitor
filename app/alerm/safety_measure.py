@@ -77,6 +77,7 @@ class AlermController:
         
         if new_weight > AlermWeights.level_one.value:
             #TODO: trigger alerm
+            print("alrem -------------------------------->>>>>>>")
             return True
         return False
         
