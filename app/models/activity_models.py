@@ -52,6 +52,7 @@ class ActiveUser(BaseModel):
     active_now: bool = False
     activity_weight: int = 0
     activity_status: ActivityStatus | str = ActivityStatus.normal_activity.value
+    alerm_level: str = None
     
     @validator('activity_status')
     def validate_activy_status(cls, v):

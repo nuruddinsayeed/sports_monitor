@@ -105,3 +105,10 @@ def get_all_active_users(mongo_op: MongoOperations) -> List[ActiveUser]:
     all_users = mongo_op.find_many(filter_data={"active_now": True})
     
     return [ActiveUser(**user) for user in all_users]
+
+def get_all_alermed_users(mongo_op: MongoOperations) -> List[ActiveUser]:
+    alermed_users = mongo_op.find_many(
+        filter_data={ "activity_weight": { "$gt": 359 } }
+    )
+    
+    return [ActiveUser(**user) for user in alermed_users]

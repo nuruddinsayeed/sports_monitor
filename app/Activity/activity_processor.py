@@ -19,7 +19,7 @@ from app.helpers.excepitons import WrongDataTypeErr
 from app.models.activity_models import ActivityInfo
 from app.controllers import auth_control
 from app.Activity import activity_db
-from app.alerm.safety_measure import AlermController
+from app.alerm.safety_measure import AlermController, get_alerm_level
 
 
 def validate_data(username: str, data: str) -> Tuple[ActivityInfo,
@@ -56,8 +56,8 @@ def controll_alerm(username: str, new_activity_status: ActivityStatus,
     
     if is_alerm:
         # triger alerm by its level
-        alerm_weight = alerm_controller.get_alerm_level()
-        print(f"-------------------------> {alerm_weight}")
+        alerm_weight = alerm_controller.alerm_level
+        # TODO: Trigger alerm
 
 
 def process_activity(username: str, activity_type: str,

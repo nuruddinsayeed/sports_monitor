@@ -1,5 +1,7 @@
 # Defining Alerm
 
+## To View this diagram please use mermaid vs code extention or View this page on github / gitlab
+
 ```mermaid
     flowchart
         classDef LevelOne fill:#F5DF99;

@@ -25,7 +25,7 @@ websocket_manager = ConnectionManager()
 
 
 @router.websocket("/{ativity_type}/{username}")
-async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
+async def user_activity_ws(websocket: WebSocket, ativity_type:str, username: str):
     
     # TODO: verify user before connect
     await websocket_manager.connect_user(websocket=websocket,
@@ -60,7 +60,7 @@ async def running_ws(websocket: WebSocket, ativity_type:str, username: str):
         print("Websocket Disconnected....")
         
 @router.websocket("/monitor/user/{username}")
-async def running_ws(websocket: WebSocket, username: str):
+async def monitor_ws(websocket: WebSocket, username: str):
     
     # TODO: verify user before connect
     await websocket_manager.connect_moinitor(websocket=websocket,
@@ -82,43 +82,3 @@ async def running_ws(websocket: WebSocket, username: str):
         await websocket_manager.disconnect_monitor(websocket=websocket,
                                                    username=username)
         print("Websocket Disconnected.......")
-            
-            
-html = """
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Chat</title>
-    </head>
-    <body>
-        <h1>WebSocket Chat</h1>
-        <form action="" onsubmit="sendMessage(event)">
-            <input type="text" id="messageText" autocomplete="off"/>
-            <button>Send</button>
-        </form>
-        <ul id='messages'>
-        </ul>
-        <script>
-            var ws = new WebSocket("ws://127.0.0.1:8000/ws/running/syeed");
-            ws.onmessage = function(event) {
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode(event.data)
-                message.appendChild(content)
-                messages.appendChild(message)
-            };
-            function sendMessage(event) {
-                var input = document.getElementById("messageText")
-                ws.send(input.value)
-                input.value = ''
-                event.preventDefault()
-            }
-        </script>
-    </body>
-</html>
-"""
-
-
-@router.get("/")
-async def get():
-    return HTMLResponse(html)

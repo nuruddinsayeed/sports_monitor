@@ -19,7 +19,6 @@ from app.controllers import db_controllers
 from app.helpers.excepitons import NotFoundError
 
 from app.models.activity_models import ActivityInfo, ActivityUserDB
-from app.routes.websockets_route import get
 from app.settings import config_vars, mongo_conf
 from app.settings import mongo_conf
 from app.settings.configs import SETTINGS

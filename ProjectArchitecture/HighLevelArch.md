@@ -1,5 +1,7 @@
 # Higher Level Projet Architecture
 
+## To View this diagram please use mermaid vs code extention or View this page on github / gitlab
+
 ```mermaid
     flowchart LR
     subgraph SMARTPHONE

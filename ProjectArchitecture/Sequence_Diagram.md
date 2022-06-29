@@ -2,6 +2,8 @@
 
 ## Overall Sequence
 
+## To View this diagram please use mermaid vs code extention or View this page on github / gitlab
+
 ```mermaid
 sequenceDiagram
     User->>+Server: Connects with the Server via WebSocket

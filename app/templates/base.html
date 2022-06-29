@@ -38,14 +38,14 @@
                     {% else %}
                         class="nav-link dropdown-toggle"
                     {% endif %}
-                        href="#" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">Active Users</i></i></a>
+                        href="#" id="active-usersdropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">Active Users</i></i></a>
                     <ul class="dropdown-menu p-0" aria-labelledby="dropdownMenuButton2">
-                        <li><a class="dropdown-item py-2" href="#">Running</a></li>
+                        <li><a class="dropdown-item py-2" href="{{url_for('active-users')}}">Running</a></li>
                         <li class="border-bottom"><a class="dropdown-item py-2" href="#">Hicking</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Alerms</a>
+                    <a class="nav-link" href="{{url_for('alerms')}}">Alerms</a>
                 </li>
             </ul>
         </nav>

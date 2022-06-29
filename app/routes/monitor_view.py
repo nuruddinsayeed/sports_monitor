@@ -78,3 +78,15 @@ async def active_users(request: Request):
     
     data = {'request': request, 'active_users': active_users}
     return templates.TemplateResponse('active_users.html', data)
+
+# Alerm Lists Page
+@router.get("/alerms", name="alerms",)
+async def alermed_users(request: Request):
+    """Renders the Active users page"""
+    
+    mongo_op = MongoOperations(
+        collection_name=config_vars.MONITOR_COLLECTION_NAME)
+    alermed_users = activity_user_db.get_all_alermed_users(mongo_op=mongo_op)
+    
+    data = {'request': request, 'alermed_users': alermed_users}
+    return templates.TemplateResponse('alermed_users.html', data)

@@ -24,7 +24,7 @@ class ActivityWeights(Enum):
     sitting = 2
     disconnected = 360
     abnormal = 360
-    fall = 361
+    fall = 360
     
 @unique 
 class AlermWeights(Enum):
