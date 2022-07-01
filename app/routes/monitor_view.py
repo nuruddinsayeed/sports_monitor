@@ -88,5 +88,7 @@ async def alermed_users(request: Request):
         collection_name=config_vars.MONITOR_COLLECTION_NAME)
     alermed_users = activity_user_db.get_all_alermed_users(mongo_op=mongo_op)
     
-    data = {'request': request, 'alermed_users': alermed_users}
+    sorted_users = sorted(alermed_users, key = lambda x: x.activity_weight, reverse=True)
+    
+    data = {'request': request, 'alermed_users': sorted_users}
     return templates.TemplateResponse('alermed_users.html', data)

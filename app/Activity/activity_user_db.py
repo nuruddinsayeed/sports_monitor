@@ -75,7 +75,7 @@ def add_active_user(username: str, activity_type:str, mongo_op: MongoOperations)
     user_dict = user.dict()
     
     
-    current_info = mongo_op.find_one({"username": username})
+    current_info = mongo_op.find_one({"username": username}, exit_silent=True)
     if current_info:
         diff = datetime.utcnow() - datetime.strptime(
             current_info.get("last_update"), '%d/%m/%Y %H:%M:%S'

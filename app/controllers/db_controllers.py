@@ -12,6 +12,7 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 
 from turtle import update
 from typing import List
+from app.helpers.excepitons import NotFoundError
 from app.models.activity_models import ActiveUser
 from app.models.auth_models import UserInDb
 from app.settings import config_vars, configs
@@ -20,11 +21,17 @@ from app.settings.mongo_conf import get_nosql_client
 SETTINGS = configs.get_settings()
 
 
-def format_mongo_ids(nested_dicts: dict):
+def format_mongo_ids(nested_dicts: dict, exit_silent: bool = False):
     """
     Loops through nested dictionary (with arrays 1 layer deep) to
     properly format the MongoDB '_id' field to a string instead of an ObjectId
     """
+    
+    if not nested_dicts:
+        if exit_silent:
+            return None
+        raise NotFoundError("Data not found!!")
+    
     for key, val in nested_dicts.items():
         if isinstance(val, dict):
             nested_dicts[key] = format_mongo_ids(val)
@@ -72,9 +79,10 @@ class MongoOperations:
     #     all_documents = self.collection.find({})
     #     return format_mongo_ids(all_documents)
 
-    def find_one(self, filter_data: dict):
+    def find_one(self, filter_data: dict, exit_silent: bool = True):
         one_document = self.collection.find_one(filter=filter_data)
-        return format_mongo_ids(one_document)
+        return format_mongo_ids(nested_dicts=one_document,
+                                exit_silent=exit_silent)
 
     def find_many(self, filter_data: dict):
         all_docs = self.collection.find(filter_data)

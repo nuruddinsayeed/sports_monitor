@@ -6,13 +6,17 @@ import asyncio
 async def send_to_ws():
     async with websockets.connect('ws://127.0.0.1:8000/ws/running/nuruddin', ping_interval=None) as websocket:
         
+        
+        # sitting, jogging, downstairs, walking, standing, disconnected,
+        #     abnormal, fall_detected
         for i in range(120):
             dup = json.dumps(
             {
                 'x':random.randint(1,100)/10,
                 'y':random.randint(1,100)/10,
                 'z': random.randint(1,100)/10,
-                'activity_class': 'Jogging'
+                'activity_class': 'standing',
+                'activityStatus': 'normalActivity'
             })
             print("sending rand ", dup)
             
