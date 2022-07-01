@@ -4,9 +4,14 @@
 {% block content %}
 
     {% for user in alermed_users %}
-        <div class="card w-75 shadow-sm p-4 mx-auto mb-4" onclick="location.href='{{url_for('activity_detail', username=user.username)}}';" style="cursor: pointer;">
+        <div class="card w-75 shadow-sm p-4 
+            {% if user.activity_weight > 399 %} bg-danger text-white 
+            {% elif user.activity_weight > 369 %} bg-warning text-dark  
+            {% elif user.activity_weight > 359 %} bg-secondary text-white
+            {% endif %}
+            mx-auto mb-4" onclick="location.href='{{url_for('activity_detail', username=user.username)}}';" style="cursor: pointer;">
             <div class="input-size d-flex align-items-center">
-                <a href="" class="text-decoration-none m-auto"><h3>{{user.username}}</h3></a>
+                <p class="m-auto">User Name: <b>{{user.username}}</b></p>
                 <p class="m-auto">Activity Type: <b>{{user.activity_type}}</b></p>
                 <p class="m-auto">User State: <b>{{user.activity_status}}</b></p>
                 {% if user.alerm_level %}
