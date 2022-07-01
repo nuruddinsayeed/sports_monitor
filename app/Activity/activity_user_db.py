@@ -23,52 +23,6 @@ from app.settings import mongo_conf
 from app.settings.configs import SETTINGS
 
 
-# def get_activity_collection() -> Collection:
-#     db_client = mongo_conf.get_nosql_client()
-#     db = db_client.get_database(SETTINGS.spm_mongo_db_name)
-#     return db.get_collection(config_vars.ACTIVITY_COLLECTION_NAME)
-
-
-# def insert_user_activity(user_mdb_id: str, activity_info: ActivityInfo):
-#     # create a user info inside user_activity collection
-#     collection = get_activity_collection()
-
-
-#     # generate activity for user
-#     user_activity = ActivityUserDB(user_id=user_mdb_id,
-#                                    activity_buckets=[activity_info, ])
-
-#     collection.insert_one(user_activity.dict())
-
-
-# def upload_activity(activity_data: ActivityInfo):
-#     collection = get_activity_collection()
-
-#     curr_date_hour = datetime.utcnow().replace(minute=0, second=0,
-#                                                microsecond=0)
-
-#     bucket_ob_id = ObjectId()
-
-#     try:
-#         collection.update_one(
-#             filter={
-#                 "user_id": activity_data.user_id,
-#                 "activity_buckets.create_at": curr_date_hour
-#             },
-#             update={
-#                 "$push": {
-#                     "activity_buckets.$.activities": activity_data.dict()}
-#             },
-#             upsert=True
-#         )
-#     except WriteError:
-#         collection.insert_one(
-#             {"user_id": activity_data.user_id,
-#              "activity_buckets": [{"_id": bucket_ob_id,
-#                                    "create_at": curr_date_hour,
-#                                    "activities": [activity_data.dict(), ]}]}
-#         )
-
 def add_active_user(username: str, activity_type:str, mongo_op: MongoOperations):
     user = ActiveUser(username=username, activity_type=activity_type,
                       active_now=True)

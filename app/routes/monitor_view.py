@@ -12,12 +12,14 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 
 
 from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 from starlette.requests import Request
-from app.Activity import activity_user_db, activity_db
 
 from app.controllers import auth_control
+from app.Activity import activity_user_db, activity_db
 from app.controllers.db_controllers import MongoOperations
+from app.models.activity_models import AlermData
 from app.settings import config_vars
 
 router = APIRouter()
@@ -92,3 +94,38 @@ async def alermed_users(request: Request):
     
     data = {'request': request, 'alermed_users': sorted_users}
     return templates.TemplateResponse('alermed_users.html', data)
+
+# @router.post("/alerms/user/{username}")
+# async def update_alerm(alerm_data: AlermData, username: str):
+#     """Reste all data for user alerm"""
+    
+#     mongo_op = MongoOperations(
+#         collection_name=config_vars.MONITOR_COLLECTION_NAME)
+    
+#     # update alerm_data
+#     mongo_op.update_one(filter_data={"username": username},
+#                         update_data=alerm_data.dict(),
+#                         upsert=False)
+    
+@router.get("/alerms/remove/user/{username}", name="reset_alerm")
+async def remove_alerm(request: Request, username: str):
+    """Reste all data for user alerm"""
+    
+    alerm_data = AlermData() # setting defult
+    mongo_op = MongoOperations(
+        collection_name=config_vars.MONITOR_COLLECTION_NAME)
+    
+    user = auth_control.verify_username(username=username)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User Not Found"
+        )
+    
+    # update alerm_data
+    mongo_op.update_one(filter_data={"username": user.username},
+                        update_data=alerm_data.dict(),
+                        upsert=False)
+    
+    return RedirectResponse(url=request.url_for('activity_detail',
+                                                username=username))

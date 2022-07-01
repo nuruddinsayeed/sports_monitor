@@ -43,16 +43,17 @@ class ActivityUserDB(BaseModel):
     _id: ObjectId
     user_id: str
     activity_buckets: List[ActivityBucketMDB]
-    
-class ActiveUser(BaseModel):
+
+class AlermData(BaseModel):
+    activity_weight: int = 0
+    alerm_level: str = None
+    activity_status: ActivityStatus | str = ActivityStatus.normal_activity.value 
+class ActiveUser(AlermData):
     _id: ObjectId
     username: str
     activity_type:str
     object_roll: str = "ActiveUser"
     active_now: bool = False
-    activity_weight: int = 0
-    activity_status: ActivityStatus | str = ActivityStatus.normal_activity.value
-    alerm_level: str = None
     
     @validator('activity_status')
     def validate_activy_status(cls, v):

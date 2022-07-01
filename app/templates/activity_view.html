@@ -59,6 +59,12 @@
         <div style="max-width: 1800px; max-height: 220px; margin: auto;">
             <canvas id="myChartZ" width="1000" height="120"></canvas>
         </div>
+
+        <div class="container text-center">
+            <a href="{{url_for('reset_alerm', username=username)}}" class="btn btn-primary btn-circled">
+                Reset Alerm for user: {{username}}
+            </a>
+        </div>
     </body>
     
     <script>
