@@ -9,7 +9,7 @@
             {% elif user.activity_weight > 369 %} bg-warning text-dark  
             {% elif user.activity_weight > 359 %} bg-secondary text-white
             {% endif %}
-            mx-auto mb-4" onclick="location.href='{{url_for('activity_detail', username=user.username)}}';" style="cursor: pointer;">
+            mx-auto mb-4" onclick="window.open('{{url_for('activity_detail', username=user.username)}}');" style="cursor: pointer;">
             <div class="input-size d-flex align-items-center">
                 <p class="m-auto">User Name: <b>{{user.username}}</b></p>
                 <p class="m-auto">Activity Type: <b>{{user.activity_type}}</b></p>
