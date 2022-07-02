@@ -78,6 +78,9 @@ class MongoOperations:
     # def find_all(self):
     #     all_documents = self.collection.find({})
     #     return format_mongo_ids(all_documents)
+    
+    def get_document_count(self, filter_data: dict):
+        return self.collection.count_documents(filter=filter_data)
 
     def find_one(self, filter_data: dict, exit_silent: bool = True):
         one_document = self.collection.find_one(filter=filter_data)
