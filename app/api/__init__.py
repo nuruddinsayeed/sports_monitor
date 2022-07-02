@@ -12,7 +12,10 @@ Copyright 2022 - 2022 This Module Belongs to Open source project
 
 from fastapi import APIRouter
 from .auth import router as auth_router
+from .activity import router as activity_router
 
 
 router = APIRouter()
 router.include_router(auth_router, prefix="/auth", tags=["auth", "api"])
+router.include_router(activity_router, prefix="/activity",
+                      tags=["activity", "api"])
