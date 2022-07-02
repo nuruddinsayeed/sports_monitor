@@ -29,15 +29,9 @@ class ActivityInfo(ActivityData):
     user_id: Optional[str]
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-
-# class ActivitySingleMDB(ActivityInfo):
-#     created_at: datetime = Field(default_factory=datetime.utcnow)
-
-
 class ActivityBucketMDB(BaseModel):
     _id: ObjectId
     activities: List[ActivityInfo]
-
 
 class ActivityUserDB(BaseModel):
     _id: ObjectId
