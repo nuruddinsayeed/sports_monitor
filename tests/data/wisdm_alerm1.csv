@@ -1,4 +1,4 @@
-user_id,activity_class,x,y,z
+user_id,activity_class,x,y,z,activityStatus
 685,sitting,2.68,9.53,0.50395286,normalActivity
 685,sitting,3.49,8.89,0.7627395,normalActivity
 685,sitting,3.64,9.38,0.92618364,normalActivity

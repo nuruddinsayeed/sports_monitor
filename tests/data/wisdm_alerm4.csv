@@ -1,4 +1,4 @@
-user_id,activity_class,x,y,z
+user_id,activity_class,x,y,z,activityStatus
 685,jogging,-2.26,3.64,-9.765789,normalActivity
 685,jogging,-10.5,2.83,5.7477865,normalActivity
 685,jogging,-14.6,5.22,-3.8681788,normalActivity
