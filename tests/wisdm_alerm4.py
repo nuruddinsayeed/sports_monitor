@@ -9,7 +9,7 @@ import csv
 data_file = Path(__file__).resolve().parent / "data" / "wisdm_alerm4.csv"
 
 async def send_to_ws():
-    async with websockets.connect('ws://127.0.0.1:8000/ws/running/sayed', ping_interval=None) as websocket:
+    async with websockets.connect('ws://127.0.0.1:8000/ws/running/sayeed', ping_interval=None) as websocket:
         
         
         # sitting, jogging, downstairs, walking, standing, disconnected,

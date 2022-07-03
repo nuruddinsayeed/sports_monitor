@@ -46,6 +46,11 @@ class WeightCalculator:
         
         if activity_status is ActivityStatus.normal_activity \
             or activity_status is ActivityStatus.disconnected:
+                
+            if curr_w > AlermWeights.level_two.value:
+            # donot update if alerm is already generated
+                return curr_w
+                
             return curr_w + ActivityWeights.sitting.value
         if activity_status is ActivityStatus.abnormal_activity:
             return AlermWeights.level_three.value

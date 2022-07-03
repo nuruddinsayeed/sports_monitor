@@ -78,7 +78,7 @@ class AlermController:
         )
         new_weight = self.updated_weight(curr_weight=int(curr_info.activity_weight),
                                          new_activity_cls=new_activity_cls,
-                                         activity_status=new_activity_status)
+                                         activity_status=new_status)
         self.alerm_level = get_alerm_level(weight=new_weight)
         
         data = {
